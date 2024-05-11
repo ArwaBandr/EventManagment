@@ -1,4 +1,7 @@
 package com.example.eventmanagment.presntation.navigation
 
-class Screens {
+sealed class Screens(val rout:String) {
+    object SplashScreen :Screens(rout ="splash_screen")
+    object LoginScreen :Screens(rout = "login_screen")
+    object SignUpScreen:Screens(rout = "sign_up_screen")
 }
