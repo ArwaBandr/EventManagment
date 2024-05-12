@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,26 +33,29 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.eventmanagment.R
+import com.example.eventmanagment.component.LoginWithGoogle
+import com.example.eventmanagment.presntation.navigation.Screens
+import com.example.eventmanagment.presntation.navigation.popUpToTop
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
+    LaunchedEffect(Unit) {
+        var loginState = viewModel.isLoggedIn
+    }
 
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top) {
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top , horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = "Login",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
                 .padding(bottom = 80.dp, top = 10.dp)
                 .align(Alignment.CenterHorizontally)
-
         )
-        var userName by remember {
+        var userEmail by remember {
             mutableStateOf("")
         }
         var userPassword by remember {
@@ -59,8 +63,8 @@ fun LoginScreen(navController: NavController) {
         }
 
         TextField(
-            value = userName,
-            onValueChange = { userName = it },
+            value = userEmail,
+            onValueChange = { userEmail = it },
             label = {
                 Text(
                     text = "Email ID or Username",
@@ -68,7 +72,7 @@ fun LoginScreen(navController: NavController) {
                     textAlign = TextAlign.Start
                 )
             },
-            //
+keyboardOptions= KeyboardOptions(keyboardType = KeyboardType.Email),
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.user_login),
@@ -81,7 +85,7 @@ fun LoginScreen(navController: NavController) {
                 .fillMaxWidth(0.90f)
                 .background(Color.White),
             shape = RoundedCornerShape(10.dp),
-            colors =TextFieldDefaults.textFieldColors(containerColor = Color.White)
+            colors = TextFieldDefaults.textFieldColors(containerColor = Color.White, focusedTextColor = Color.Black, unfocusedTextColor = Color.Gray)
         )
         TextField(
             value = userPassword,
@@ -100,17 +104,22 @@ fun LoginScreen(navController: NavController) {
                 .background(Color.White),
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            colors = TextFieldDefaults.textFieldColors(containerColor = Color.White)
+            colors = TextFieldDefaults.textFieldColors(containerColor = Color.White,focusedTextColor = Color.Black, unfocusedTextColor = Color.Gray)
 
         )
 
         Text(text = "forget password?", style = TextStyle(Color.Blue), modifier = Modifier
             .padding(start = 230.dp, bottom = 80.dp)
-            .clickable { })
-
+            .clickable { viewModel.resetPassword(userEmail) })
 
         Button(
-            onClick = {},
+            onClick = {
+             viewModel.login(userEmail,userPassword)
+                navController.navigate(Screens.MainApp.Home.rout){
+                    popUpToTop(navController)
+                }
+                }
+            ,
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
                 .fillMaxWidth(0.8f)
@@ -134,13 +143,15 @@ fun LoginScreen(navController: NavController) {
                 .align(Alignment.CenterHorizontally),
             color = MaterialTheme.colorScheme.primaryContainer
         )
-        Icon(
-            painter = painterResource(id = R.drawable.google),
-            contentDescription = "google icon",
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clickable { }
-        )
+        LoginWithGoogle(navController)
+//        Icon(
+//            painter = painterResource(id = R.drawable.google_icon),
+//            contentDescription = "google icon",
+//            tint = Color.Unspecified,
+//            modifier = Modifier
+//                .align(Alignment.CenterHorizontally)
+//                .clickable {  }
+//        )
 
     }
 

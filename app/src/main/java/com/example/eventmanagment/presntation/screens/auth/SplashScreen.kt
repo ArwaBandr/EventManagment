@@ -50,7 +50,7 @@ fun SplashScreen(navController: NavController) {
             )
         )
         Button(
-            onClick = {navController.navigate(Screens.LoginScreen.rout)},
+            onClick = {navController.navigate(Screens.Authentication.LoginScreen.rout)},
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
                 .fillMaxWidth(0.8f)
@@ -64,7 +64,7 @@ fun SplashScreen(navController: NavController) {
             text = "Sign in",
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
-                .clickable {navController.navigate(Screens.SignUpScreen.rout) }
+                .clickable {navController.navigate(Screens.Authentication.SignUpScreen.rout) }
                 .align(Alignment.CenterHorizontally)
         )
     }

@@ -1,6 +1,5 @@
 package com.example.eventmanagment.presntation.screens.auth
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -20,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,15 +31,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.eventmanagment.R
+import com.example.eventmanagment.component.LoginWithGoogle
+import com.example.eventmanagment.presntation.navigation.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -61,34 +58,13 @@ fun SignUpScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var username by remember {
-                mutableStateOf("")
-            }
+
             var passowrd by remember {
                 mutableStateOf("")
             }
             var emailId by remember {
                 mutableStateOf("")
             }
-            TextField(
-                value = username, onValueChange = { username = it },
-                label = {
-                    Text(text = "Username", color = Color.Gray)
-                },
-                //shape = RoundedCornerShape(10.dp),
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.user_login),
-                        contentDescription = ""
-                    )
-                },
-                modifier = Modifier
-                     .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth(0.9f)
-                    .padding(10.dp),
-                colors =TextFieldDefaults.textFieldColors(containerColor = Color.White)
-
-            )
 
             TextField(
                 value = emailId, onValueChange = { emailId = it },
@@ -100,11 +76,12 @@ fun SignUpScreen(navController: NavController) {
                         contentDescription = ""
                     )
                 },
+                keyboardOptions= KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                     .align(Alignment.CenterHorizontally)
+                    .align(Alignment.CenterHorizontally)
                     .padding(10.dp),
-                colors =TextFieldDefaults.textFieldColors(containerColor = Color.White)
+                colors =TextFieldDefaults.textFieldColors(containerColor = Color.White,focusedTextColor = Color.Black, unfocusedTextColor = Color.Gray)
             )
 
             TextField(
@@ -123,11 +100,14 @@ fun SignUpScreen(navController: NavController) {
                     .padding(top = 10.dp, bottom = 50.dp),
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                colors =TextFieldDefaults.textFieldColors(containerColor = Color.White)
+                colors =TextFieldDefaults.textFieldColors(containerColor = Color.White,focusedTextColor = Color.Black, unfocusedTextColor = Color.Gray)
 
             )
             Button(
-                onClick = {},
+                onClick = {
+                      viewModel.signup(emailId,passowrd)
+                    navController.navigate(Screens.MainApp.Home.rout)
+                },
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
@@ -152,12 +132,14 @@ fun SignUpScreen(navController: NavController) {
                     .align(Alignment.CenterHorizontally),
                 color = MaterialTheme.colorScheme.primaryContainer
             )
-            Icon(
-                painter = painterResource(id = R.drawable.google),
-                contentDescription = "google icon",
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally).clickable {  }
-            )
+            LoginWithGoogle(navController)
+//            Icon(
+//                painter = painterResource(id = R.drawable.google_icon),
+//                contentDescription = "google icon",
+//                tint = Color.Unspecified,
+//                modifier = Modifier
+//                    .align(Alignment.CenterHorizontally).clickable {  }
+//            )
 
         }
     }
