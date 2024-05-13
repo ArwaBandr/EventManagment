@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -82,7 +83,7 @@ class MainActivity : ComponentActivity() {
                             Snackbar(
                                 modifier = Modifier
                                     .padding(16.dp)
-                                    .fillMaxSize(), containerColor = Color.Red.copy(0.5f)
+                                    .fillMaxWidth(), containerColor = Color.Red.copy(0.5f)
                             )
                             {
                                 Text(text = authviewModel.error.value)
