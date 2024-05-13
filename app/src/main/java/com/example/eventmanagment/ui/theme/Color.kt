@@ -3,7 +3,7 @@ package com.example.eventmanagment.ui.theme
 import androidx.compose.ui.graphics.Color
 
 ///coloring
-val PrimaryColor = Color(0xFF6A74CD)
+val PrimaryColor = Color(0xFF5B67CA)
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)

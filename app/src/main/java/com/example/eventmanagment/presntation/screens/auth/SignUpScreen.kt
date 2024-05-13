@@ -1,5 +1,6 @@
 package com.example.eventmanagment.presntation.screens.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,7 +50,8 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
         Text(
             text = "Sign Up",
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(start = 50.dp, top = 110.dp, bottom = 50.dp)
+            modifier = Modifier.padding(start = 50.dp, top = 110.dp, bottom = 50.dp),
+            color = MaterialTheme.colorScheme.primary
         )
         Column(
             Modifier
@@ -103,10 +106,13 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
                 colors =TextFieldDefaults.textFieldColors(containerColor = Color.White,focusedTextColor = Color.Black, unfocusedTextColor = Color.Gray)
 
             )
+            val context =LocalContext.current
             Button(
                 onClick = {
-                      viewModel.signup(emailId,passowrd)
-                    navController.navigate(Screens.MainApp.Home.rout)
+                    if (emailId.isNotEmpty() && passowrd.isNotEmpty()){
+                        viewModel.signup(emailId,passowrd)}
+                    else{Toast.makeText(context,"Please fill your email or password",Toast.LENGTH_SHORT).show()}
+
                 },
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
@@ -117,7 +123,7 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
 
             ) {
-                Text(text = "Create")
+                Text(text = "Create" , color = Color.White)
             }
             Text(
                 text = "or with", modifier = Modifier

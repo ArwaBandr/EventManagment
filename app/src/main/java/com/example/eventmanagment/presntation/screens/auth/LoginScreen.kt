@@ -1,5 +1,6 @@
 package com.example.eventmanagment.presntation.screens.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,14 +21,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,24 +38,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.eventmanagment.R
 import com.example.eventmanagment.component.LoginWithGoogle
-import com.example.eventmanagment.presntation.navigation.Screens
-import com.example.eventmanagment.presntation.navigation.popUpToTop
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
-    LaunchedEffect(Unit) {
-        var loginState = viewModel.isLoggedIn
-    }
+    Text(
+        text = "Login",
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier
+            .padding(vertical = 50.dp, horizontal = 16.dp)
 
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top , horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = "Login",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier
-                .padding(bottom = 80.dp, top = 10.dp)
-                .align(Alignment.CenterHorizontally)
-        )
+    )
+
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally) {
+
         var userEmail by remember {
             mutableStateOf("")
         }
@@ -110,14 +108,16 @@ keyboardOptions= KeyboardOptions(keyboardType = KeyboardType.Email),
 
         Text(text = "forget password?", style = TextStyle(Color.Blue), modifier = Modifier
             .padding(start = 230.dp, bottom = 80.dp)
-            .clickable { viewModel.resetPassword(userEmail) })
-
+            .clickable {if(userEmail.isNotEmpty()){viewModel.resetPassword(userEmail)}})
+val context = LocalContext.current
         Button(
             onClick = {
+                if (userEmail.isNotEmpty() && userPassword.isNotEmpty()){
              viewModel.login(userEmail,userPassword)
-                navController.navigate(Screens.MainApp.Home.rout){
-                    popUpToTop(navController)
                 }
+                else{
+                    Toast.makeText(context,"Please fill your email or password", Toast.LENGTH_SHORT).show()}
+
                 }
             ,
             shape = RoundedCornerShape(10.dp),
@@ -128,7 +128,7 @@ keyboardOptions= KeyboardOptions(keyboardType = KeyboardType.Email),
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
 
         ) {
-            Text(text = "Login")
+            Text(text = "Login", color = Color.White)
         }
         Text(
             text = "or with", modifier = Modifier

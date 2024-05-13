@@ -52,8 +52,8 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(this)
 
         setContent {
+            val authviewModel :AuthViewModel= hiltViewModel()
             EventManagmentTheme {
-                val authviewModel = hiltViewModel<AuthViewModel>()
                 val navController = rememberNavController()
 
                 var showBottomBar by rememberSaveable {
@@ -88,11 +88,12 @@ class MainActivity : ComponentActivity() {
                                 Text(text = authviewModel.error.value)
                             }
                         }
-                        EventAppNavigation(authViewModel = authviewModel)
+                        EventAppNavigation(authViewModel = authviewModel ,navController)
+                    }
                         if (showBottomBar) {
                             BottomBar(navController)
                         }
-                    }
+
                 }
             }
         }

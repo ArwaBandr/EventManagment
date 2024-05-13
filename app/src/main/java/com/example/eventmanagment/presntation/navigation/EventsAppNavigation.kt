@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -26,14 +27,14 @@ import com.example.eventmanagment.presntation.screens.auth.SplashScreen
 @Composable
 fun EventAppNavigation(
     authViewModel: AuthViewModel,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController
 ) {
-
+    val context = LocalContext.current
     NavHost(navController = navController, startDestination = authViewModel.isLoggedIn.value) {
-
         authNavigation(navController, authViewModel)
         mainAppNavigation(navController) {
-            authViewModel.loguot()
+
+            authViewModel.loguot(context)
         }
 
     }

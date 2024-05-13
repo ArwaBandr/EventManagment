@@ -40,6 +40,7 @@ import kotlinx.coroutines.tasks.await
 
 @Composable
 fun LoginWithGoogle(navController: NavController) {
+    val context = LocalContext.current
 
     val authviewModel = hiltViewModel<AuthViewModel>()
     var user by remember {
@@ -57,7 +58,6 @@ fun LoginWithGoogle(navController: NavController) {
 
     val token =
         "804885342105-9v7ar1kaj52bekomkgc2768qra923it7.apps.googleusercontent.com"
-    val context = LocalContext.current
     if (user == null) {
         authviewModel.isLoggedIn.value = Screens.Authentication.rout
         Image(modifier = Modifier
@@ -74,7 +74,7 @@ fun LoginWithGoogle(navController: NavController) {
             },painter =painterResource(id = R.drawable.google_icon) , contentDescription = "google")
     } else {
         authviewModel.isLoggedIn.value = Screens.MainApp.rout
-        navController.navigate(Screens.MainApp.Home.rout)
+        //navController.navigate(Screens.MainApp.Home.rout)
     }
 
 }
