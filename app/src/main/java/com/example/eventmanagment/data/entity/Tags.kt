@@ -13,8 +13,8 @@ data class Tags(
     val name :String,
     @ColumnInfo(name = "tag_color")
     val color:String,
-    @ColumnInfo(name = "tag_border")
-    val borderColor:String
+//    @ColumnInfo(name = "tag_border")
+//    val borderColor:String
 )
 
 data class TaskWithTagLists(

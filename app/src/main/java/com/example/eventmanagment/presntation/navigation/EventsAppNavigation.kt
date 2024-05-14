@@ -2,13 +2,18 @@ package com.example.eventmanagment.presntation.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -23,6 +28,8 @@ import com.example.eventmanagment.presntation.screens.auth.AuthViewModel
 import com.example.eventmanagment.presntation.screens.auth.LoginScreen
 import com.example.eventmanagment.presntation.screens.auth.SignUpScreen
 import com.example.eventmanagment.presntation.screens.auth.SplashScreen
+import com.example.eventmanagment.presntation.screens.task.TaskViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun EventAppNavigation(
@@ -76,14 +83,28 @@ fun NavGraphBuilder.mainAppNavigation(
             }
         }
         composable(Screens.MainApp.TaskByDate.rout) {
-            Column(
+            val viewModel: TaskViewModel = hiltViewModel()
+            LazyColumn(
                 Modifier
                     .fillMaxSize()
                     .background(Color.Gray)
             ) {
+                item {
+                    val result = viewModel.tasks.collectAsState(initial = null)
+                    val tags = viewModel.tags.collectAsState(initial = null)
+                    val tasksByTags = viewModel.taskByTags.collectAsState(initial = null)
+                    Text(text = result.value.toString())
+                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
+                    Text(text = tags.value.toString())
+                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
+                    Text(text = tasksByTags.value.toString())
+                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
 
+
+                }
             }
         }
+
         composable(Screens.MainApp.CategoryScreen.rout) {
             Column(
                 Modifier
@@ -93,16 +114,17 @@ fun NavGraphBuilder.mainAppNavigation(
                 Button(onClick = { logout.invoke() }) {
                     Text(text = "SignOut")
                 }
-            }}
-            composable(Screens.MainApp.AddScreen.rout) {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .background(Color.Magenta)
-                ) {
-
-                }
             }
+        }
+        composable(Screens.MainApp.AddScreen.rout) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Magenta)
+            ) {
+
+            }
+        }
         composable(Screens.MainApp.StaticsScreen.rout) {
             Column(
                 Modifier
@@ -118,6 +140,6 @@ fun NavGraphBuilder.mainAppNavigation(
 fun NavOptionsBuilder.popUpToTop(navController: NavController) {
     popUpTo(navController.currentBackStackEntry?.destination?.route ?: return) {
         inclusive = true
-        saveState=true
+        saveState = true
     }
 }
