@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -21,15 +22,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.dialog
 import androidx.navigation.navigation
+import com.example.eventmanagment.component.DatePickerr
 import com.example.eventmanagment.presntation.screens.auth.AuthViewModel
 import com.example.eventmanagment.presntation.screens.auth.LoginScreen
 import com.example.eventmanagment.presntation.screens.auth.SignUpScreen
 import com.example.eventmanagment.presntation.screens.auth.SplashScreen
+import com.example.eventmanagment.presntation.screens.task.AddTaskScreen
+import com.example.eventmanagment.presntation.screens.task.AddTaskViewModel
+import com.example.eventmanagment.presntation.screens.task.FilterTasksViewModel
+import com.example.eventmanagment.presntation.screens.task.HomeScreen
+import com.example.eventmanagment.presntation.screens.task.TaskByDatScreen
 import com.example.eventmanagment.presntation.screens.task.TaskViewModel
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun EventAppNavigation(
@@ -74,35 +79,33 @@ fun NavGraphBuilder.mainAppNavigation(
 ) {
     navigation(startDestination = Screens.MainApp.Home.rout, route = Screens.MainApp.rout) {
         composable(Screens.MainApp.Home.rout) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.Blue)
-            ) {
-
-            }
+            val viewModel = hiltViewModel<FilterTasksViewModel>()
+            HomeScreen(viewModel,navController)
         }
         composable(Screens.MainApp.TaskByDate.rout) {
-            val viewModel: TaskViewModel = hiltViewModel()
-            LazyColumn(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.Gray)
-            ) {
-                item {
-                    val result = viewModel.tasks.collectAsState(initial = null)
-                    val tags = viewModel.tags.collectAsState(initial = null)
-                    val tasksByTags = viewModel.taskByTags.collectAsState(initial = null)
-                    Text(text = result.value.toString())
-                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
-                    Text(text = tags.value.toString())
-                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
-                    Text(text = tasksByTags.value.toString())
-                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
+            val viewModel = hiltViewModel<FilterTasksViewModel>()
+            TaskByDatScreen(viewModel)
 
-
-                }
-            }
+//            val viewModel: TaskViewModel = hiltViewModel()
+//            LazyColumn(
+//                Modifier
+//                    .fillMaxSize()
+//                    .background(Color.Gray)
+//            ) {
+//                item {
+//                    val result = viewModel.tasks.collectAsState(initial = null)
+//                    val tags = viewModel.tags.collectAsState(initial = null)
+//                    val tasksByTags = viewModel.taskByTags.collectAsState(initial = null)
+//                    Text(text = result.value.toString())
+//                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
+//                    Text(text = tags.value.toString())
+//                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
+//                    Text(text = tasksByTags.value.toString())
+//                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
+//
+//
+//                }
+//            }
         }
 
         composable(Screens.MainApp.CategoryScreen.rout) {
@@ -117,13 +120,9 @@ fun NavGraphBuilder.mainAppNavigation(
             }
         }
         composable(Screens.MainApp.AddScreen.rout) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.Magenta)
-            ) {
-
-            }
+            val viewmodel: AddTaskViewModel = hiltViewModel()
+            viewmodel.taskDate.value = it.savedStateHandle.get<String>("selectedDate").orEmpty()
+            AddTaskScreen(navController, viewmodel)
         }
         composable(Screens.MainApp.StaticsScreen.rout) {
             Column(
@@ -132,6 +131,15 @@ fun NavGraphBuilder.mainAppNavigation(
                     .background(Color.Green)
             ) {
 
+            }
+        }
+        dialog(Screens.MainApp.DateDailog.rout, dialogProperties = DialogProperties(
+            dismissOnClickOutside = true,
+            dismissOnBackPress = true
+        )){
+           // MonthlyHorizentalCalenderView(navController)
+            DatePickerr(navController){
+                navController.popBackStack()
             }
         }
     }

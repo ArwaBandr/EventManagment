@@ -36,4 +36,14 @@ class TaskRepositry @Inject constructor(private val taskDao: TaskDao) {
     fun getAllTags():Flow<List<Tags>>{
         return taskDao.getAllTags()
     }
+
+    suspend fun insertTagList(tagList: List<Tags>){
+         taskDao.upsertTagList(tagList)
+    }
+
+     fun sortTaskByCreationDate(date: String):Flow<List<Task>>{
+        return taskDao.sortByCreationDate(date)
+    }
+//    fun getTaskDate():Boolean{
+//    }
 }

@@ -36,6 +36,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled=true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -113,7 +114,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
-
     //unit test
 
     // Testing dependencies
@@ -121,4 +121,10 @@ dependencies {
     testImplementation ("androidx.arch.core:core-testing:2.1.0")
     // Firebase Authentication
     implementation ("com.google.firebase:firebase-auth:21.0.1")
+    // The compose calendar library
+    implementation("com.kizitonwose.calendar:compose:2.5.1")
+    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
+
+    // The compose calendar library
+    implementation("com.kizitonwose.calendar:compose:<latest-version>")
 }

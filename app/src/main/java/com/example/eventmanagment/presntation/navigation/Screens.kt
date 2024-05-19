@@ -18,6 +18,7 @@ sealed class Screens(val rout:String) {
         data object AddScreen :Screens("add_screen")
         data object  CategoryScreen:Screens("category_screen")
         data object StaticsScreen:Screens("Statics_screen")
+        data object DateDailog:Screens("DateDailog")
     }
     data object Authentication:Screens("authGraph"){
         object SplashScreen :Screens(rout ="splash_screen")
