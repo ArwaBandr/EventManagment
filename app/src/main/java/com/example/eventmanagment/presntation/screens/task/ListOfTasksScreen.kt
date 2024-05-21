@@ -40,7 +40,8 @@ fun ListOfTasksScreen(
                 taskTitle = it.title,
                 timeFrom = it.timeFrom,
                 timeTo = it.timeTo,
-                tag = listOf(tagAndtasks?.tag)
+                tag = listOf(tagAndtasks?.tag),
+                navController
             )
         }
     }

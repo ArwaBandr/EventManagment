@@ -33,13 +33,15 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.eventmanagment.data.entity.Tags
 import com.example.eventmanagment.iconByName
+import com.example.eventmanagment.presntation.navigation.Screens
 import com.example.eventmanagment.ui.theme.Navy
 import com.example.eventmanagment.ui.theme.PrimaryColor
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Tags?>) {
+fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Tags?>,navController: NavController) {
     val dividerHeight = remember {
         mutableStateOf(50.dp)
     }
@@ -97,6 +99,7 @@ fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Ta
                         Text(text = "$timeFrom - $timeTo", fontSize = 15.sp, color = Color.Gray)
                     }
                 }
+                //box
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = "",
@@ -104,7 +107,7 @@ fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Ta
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-
+                            navController.navigate(Screens.MainApp.DropDownMenu.rout)
                         }
 
                 )

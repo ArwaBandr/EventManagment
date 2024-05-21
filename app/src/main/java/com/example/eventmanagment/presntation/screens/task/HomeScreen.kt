@@ -180,7 +180,8 @@ fun HomeScreen(
                 taskTitle = it.task.title,
                 timeFrom = it.task.timeFrom,
                 timeTo = it.task.timeTo,
-                tag = it.tag
+                tag = it.tag,
+                navController
             )
         }
         item {

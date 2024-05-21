@@ -84,7 +84,7 @@ fun NavGraphBuilder.mainAppNavigation(
         }
         composable(Screens.MainApp.TaskByDate.rout) {
             val viewModel = hiltViewModel<FilterTasksViewModel>()
-            TaskByDatScreen(viewModel)
+            TaskByDatScreen(viewModel,navController)
 
 //            val viewModel: TaskViewModel = hiltViewModel()
 //            LazyColumn(
@@ -170,7 +170,7 @@ fun NavGraphBuilder.mainAppNavigation(
         dialog(Screens.MainApp.DropDownMenu.rout,dialogProperties = DialogProperties(
             dismissOnClickOutside = true,
             dismissOnBackPress = true) ){
-           DropDownMenu()
+           DropDownMenu(navController)
         }
     }
 }

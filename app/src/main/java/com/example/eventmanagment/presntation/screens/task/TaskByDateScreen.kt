@@ -34,13 +34,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import java.time.LocalDate
 import com.example.eventmanagment.R
 import com.example.eventmanagment.component.TaskCard
 import com.example.eventmanagment.ui.theme.textcolor
 
 @Composable
-fun TaskByDatScreen(filterTasksViewModel: FilterTasksViewModel) {
+fun TaskByDatScreen(filterTasksViewModel: FilterTasksViewModel,navController: NavController) {
     // var tasks = filterTasksViewModel.filteredTask.value.collectAsState(initial = null)
 //    LaunchedEffect(Unit) {
 //        filterTasksViewModel.filterTaskByDate(LocalDate.now().toString())
@@ -87,7 +88,8 @@ fun TaskByDatScreen(filterTasksViewModel: FilterTasksViewModel) {
                                     taskTitle = taskWithTag.task.title,
                                     timeFrom = taskWithTag.task.timeFrom,
                                     timeTo = taskWithTag.task.timeTo,
-                                    tag = taskWithTag.tag
+                                    tag = taskWithTag.tag,
+                                    navController
                                 )
                             }
                         }
