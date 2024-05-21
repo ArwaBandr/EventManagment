@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eventmanagment.data.entity.Tags
 import com.example.eventmanagment.data.entity.Task
+import com.example.eventmanagment.data.entity.TaskTagCrossRef
 import com.example.eventmanagment.data.entity.TaskType
 import com.example.eventmanagment.data.repositry.TaskRepositry
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +23,16 @@ class AddTaskViewModel @Inject constructor(val taskRepositry: TaskRepositry) : V
     val taskType: MutableState<String> = mutableStateOf(TaskType.OnGoing.type)
     val category: MutableState<String> = mutableStateOf("")
 
-    var allTasks = taskRepositry.getAllTasks()
-    val allTags =  taskRepositry.getAllTags()
+    //tags
+    val tagName: MutableState<String> = mutableStateOf("")
+    val tagColor: MutableState<String> = mutableStateOf("")
+    val tagIcon: MutableState<String> = mutableStateOf("")
+    val allTags = taskRepositry.getAllTags()
+
+
+    val selectedTags = mutableStateOf<Set<Tags>>(emptySet())
+
+    //var allTasks = taskRepositry.getAllTasks()
     fun addTask() {
         viewModelScope.launch {
             val task = Task(
@@ -35,14 +44,29 @@ class AddTaskViewModel @Inject constructor(val taskRepositry: TaskRepositry) : V
                 timeTo = endDate.value,
                 tagName = category.value
             )
-            taskRepositry.insertTask(task = task)
+            insertTaskWithTags(
+                task,
+                selectedTags.value.toList()
+            )
         }
     }
 
-    fun addTags(list: List<Tags>) {
+    fun addTags() {
         viewModelScope.launch {
-            taskRepositry.insertTagList(list)
+            taskRepositry.insertTag(
+                Tags(
+                    tagName.value,
+                    tagColor.value,
+                    tagIcon.value
+                )
+            )
         }
     }
 
+    private suspend fun insertTaskWithTags(task: Task, tags: List<Tags>) {
+        val taskId = taskRepositry.insertTask(task)
+        val taskTaggCrossRefs =
+            tags.map { TaskTagCrossRef(taskId, it.name) }
+        taskRepositry.insertTaskTagCrossRefs(taskTaggCrossRefs)
+    }
 }

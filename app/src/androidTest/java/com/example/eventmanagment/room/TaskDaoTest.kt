@@ -3,10 +3,10 @@ package com.example.eventmanagment.room
 import androidx.test.filters.SmallTest
 import com.example.eventmanagment.data.dao.TaskDao
 import com.example.eventmanagment.data.database.EventDatabase
+import com.example.eventmanagment.data.entity.TagWithTaskLists
 import com.example.eventmanagment.data.entity.Tags
 import com.example.eventmanagment.data.entity.Task
 import com.example.eventmanagment.data.entity.TaskType
-import com.example.eventmanagment.data.entity.TaskWithTagLists
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.flow.first
@@ -111,7 +111,8 @@ class TaskDaoTest {
     fun upsertTag()= runTest {
         val tag = Tags(
             "Work",
-            "color"
+            "color",
+            ""
         )
 
         taskDao.upsertTag(tag)
@@ -123,7 +124,8 @@ class TaskDaoTest {
     fun deleteTag()= runTest {
         val tag = Tags(
             "Work",
-            "color"
+            "color",
+            ""
         )
         taskDao.upsertTag(tag)
         taskDao.deletTag(tag)
@@ -135,11 +137,13 @@ class TaskDaoTest {
     fun getAllTags()= runTest {
         val tag = Tags(
             "Personal",
-            "color"
+            "color",
+            ""
         )
         val tag2 = Tags(
             "Work",
-            "color"
+            "color",
+            ""
         )
 
         taskDao.upsertTag(tag)
@@ -153,11 +157,12 @@ class TaskDaoTest {
     fun getTagsWithTask() = runTest {
         val tag = Tags(
             "Personal",
-            "color"
+            "color",""
         )
         val tag2 = Tags(
             "Work",
-            "color"
+            "color",
+            ""
         )
         val task = Task(
             taskId = 1,
@@ -185,7 +190,7 @@ class TaskDaoTest {
         taskDao.addTask(task)
         taskDao.addTask(task2)
         val gettaskWithTags =taskDao.getTagsWithTask("Work").first()
-        val expect = listOf(TaskWithTagLists(tag2, listOf(task,task2)))
+        val expect = listOf(TagWithTaskLists(tag2, listOf(task,task2)))
         assert(gettaskWithTags ==expect)
 
     }

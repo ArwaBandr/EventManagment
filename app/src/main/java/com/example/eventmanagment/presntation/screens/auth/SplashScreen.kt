@@ -17,6 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,17 +33,25 @@ import com.example.eventmanagment.presntation.navigation.Screens
 @Composable
 fun SplashScreen(navController: NavController) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().semantics {
+                                                    testTag="splashScreen"
+        },
         verticalArrangement = Arrangement.SpaceAround,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+
     ) {
-        Image(painter = painterResource(id = R.drawable.first_image), contentDescription = "")
+        Image(painter = painterResource(id = R.drawable.first_image), contentDescription = "", modifier = Modifier.semantics {
+            testTag="intro image"
+        })
         Text(
             text = "Event App",
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.semantics {
+                contentDescription="title text"
+            }
         )
         Text(
             text = "plan what will you will do to be organized for today,tomorrow and beyond.",
@@ -48,7 +59,9 @@ fun SplashScreen(navController: NavController) {
             textAlign = TextAlign.Center,
             modifier = Modifier.align(
                 Alignment.CenterHorizontally
-            )
+            ).semantics {
+                contentDescription="description text"
+            }
         )
         Button(
             onClick = {navController.navigate(Screens.Authentication.LoginScreen.rout)},
@@ -56,7 +69,10 @@ fun SplashScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .align(Alignment.CenterHorizontally)
-                .size(50.dp),
+                .size(50.dp)
+                .semantics {
+                           testTag="login Button"
+                },
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
         ) {
             Text(text = "Login", color = Color.White)
@@ -67,6 +83,9 @@ fun SplashScreen(navController: NavController) {
             modifier = Modifier
                 .clickable {navController.navigate(Screens.Authentication.SignUpScreen.rout) }
                 .align(Alignment.CenterHorizontally)
+                .semantics {
+                testTag="sign in"
+            }
         )
     }
 }

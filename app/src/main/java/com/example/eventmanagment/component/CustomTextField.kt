@@ -1,6 +1,7 @@
 package com.example.eventmanagment.component
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialogDefaults.containerColor
@@ -12,6 +13,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -25,7 +27,9 @@ fun CustomTextField(
     trailingIcon: @Composable() (() -> Unit)? = null,
     isReadOnly: Boolean
 ) {
-    Column(modifier = Modifier.padding(12.dp) ){
+    Column(modifier = modifier
+        .padding(vertical = 12.dp)
+        ){
         Text(
             text = label,
             Modifier.padding(end = 20.dp, start = 20.dp),
@@ -35,9 +39,11 @@ fun CustomTextField(
             .padding(horizontal = 6.dp)
             .fillMaxWidth(),
             colors = TextFieldDefaults.colors(
-                focusedTextColor = containerColor,
-                unfocusedTextColor = containerColor,
-                disabledContainerColor = containerColor,
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Gray,
+                disabledContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White,
                 cursorColor = textColor,
                 focusedIndicatorColor = textColor,
                 focusedLabelColor = textColor

@@ -44,7 +44,7 @@ fun TaskCategeryCard(
     title: String,
     tintColor: Color,
     totalTasksInCategory: String,
-    onClick: () -> Unit,
+    onClick:   () -> Unit,
     image: @Composable () -> Unit
 ) {
     Card(modifier = Modifier

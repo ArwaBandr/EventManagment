@@ -90,13 +90,13 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         EventAppNavigation(authViewModel = authviewModel ,navController)
-                    }
+
                         if (showBottomBar) {
                             BottomBar(navController)
                         }
 
-                }
-            }
+
+                } }}
         }
     }
 }

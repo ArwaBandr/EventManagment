@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel() {
-    private val auth = Firebase.auth
+     val auth = Firebase.auth
     var isLoggedIn =
         if (auth.currentUser == null) mutableStateOf(Screens.Authentication.rout) else mutableStateOf(
             Screens.MainApp.rout

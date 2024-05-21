@@ -4,17 +4,28 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
+import com.example.eventmanagment.data.entity.TagWithTaskLists
 import com.example.eventmanagment.data.entity.Tags
 import com.example.eventmanagment.data.entity.Task
-import com.example.eventmanagment.data.entity.TaskWithTagLists
+import com.example.eventmanagment.data.entity.TaskTagCrossRef
+import com.example.eventmanagment.data.entity.TaskWithTags
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
-
+    @Transaction
     @Upsert
-    suspend fun addTask(task: Task)
+    suspend fun addTask(task: Task): Long
+
+    @Transaction
+    @Upsert
+    suspend fun insertTaskWithTags(task: Task, tags: List<Tags>)
+
+    @Transaction
+    @Upsert
+    suspend fun insertTaskTagCross(taskTagCrossRef: List<TaskTagCrossRef>)
 
     @Delete
     suspend fun deleteTask(task: Task)
@@ -29,16 +40,24 @@ interface TaskDao {
     suspend fun deletTag(tags: Tags)
 
     @Query("SELECT * From tags_table")
-     fun getAllTags(): Flow<List<Tags>>
+    fun getAllTags(): Flow<List<Tags>>
 
     @Query("Select * From tags_table where tag_name =:tagName")
-    fun getTagsWithTask(tagName: String): Flow<List<TaskWithTagLists>>
+    fun getTagsWithTask(tagName: String): Flow<List<TagWithTaskLists>>
 
-  @Query("SELECT * FROM task_table WHERE date LIKE :date")
-   fun sortByCreationDate(date:String):Flow<List<Task>>
-  @Upsert
-  suspend fun upsertTagList(tag:List<Tags>)
+    @Query("SELECT * FROM task_table WHERE date LIKE :date")
+    fun sortByCreationDate(date: String): Flow<List<TaskWithTags>>
 
-//  @Query("SELECT date FROM task_table")
-//  fun i
+    @Upsert
+    suspend fun upsertTagList(tag: List<Tags>)
+
+
+    @Transaction
+    @Query("SELECT * FROM task_table")
+    fun getTasksWithTags(): Flow<List<TaskWithTags>>
+
+    @Transaction
+    @Query("SELECT * FROM tags_table")
+    fun getTagWithTaskLists(): Flow<List<TagWithTaskLists>>
+
 }

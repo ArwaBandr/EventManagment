@@ -1,7 +1,12 @@
+package com.example.eventmanagment.component
+
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,11 +18,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -26,21 +34,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.eventmanagment.data.entity.Tags
+import com.example.eventmanagment.iconByName
 import com.example.eventmanagment.ui.theme.Navy
 import com.example.eventmanagment.ui.theme.PrimaryColor
-
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: Tags?) {
+fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Tags?>) {
     val dividerHeight = remember {
         mutableStateOf(50.dp)
     }
-    Color.White.toArgb().toShort()
     Card(
         modifier = Modifier
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = Color(
-                tag?.color?.toIntOrNull() ?: PrimaryColor.toArgb()
+                tag?.firstOrNull()?.color?.toIntOrNull() ?: PrimaryColor.toArgb()
             ).copy(0.3f)
         )
 
@@ -59,7 +67,10 @@ fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: Tags?) 
                             .height(dividerHeight.value)
                             .width(3.dp)
                             .background(
-                                Color(tag?.color?.toIntOrNull() ?: PrimaryColor.toArgb()),
+                                Color(
+                                    tag?.firstOrNull()?.color?.toIntOrNull()
+                                        ?: PrimaryColor.toArgb()
+                                ),
                                 RoundedCornerShape(16.dp)
                             )
                             .padding(0.dp, 40.dp)
@@ -90,42 +101,54 @@ fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: Tags?) 
                     Icons.Default.MoreVert,
                     contentDescription = "",
                     tint = Color.Gray,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable {
+
+                        }
+
                 )
 
             }
-            Row(
+            FlowRow(
                 Modifier
                     .fillMaxWidth()
                     .padding(25.dp, 10.dp), Arrangement.spacedBy(10.dp)
             ) {
-                Box(
-                    Modifier
-                        .background(
-                            Color(tag?.color?.toIntOrNull() ?: PrimaryColor.toArgb()).copy(0.2f),
-                            RoundedCornerShape(16.dp)
-                        )
+                tag?.forEach { tag ->
+                    Box(
+                        Modifier
+                            .background(
+                                Color(
+                                    tag?.color?.toIntOrNull() ?: PrimaryColor.toArgb()
+                                ).copy(0.2f),
+                                RoundedCornerShape(16.dp)
+                            )
 //                        .border(
 //                            1.dp,
 //                            Color(tag?.color?.toIntOrNull() ?: PrimaryColor.toArgb()),
 //                            RoundedCornerShape(16.dp)
 //                        )
-                ) {
-                    Text(
-                        text = tag?.name.orEmpty(),
-                        modifier = Modifier.padding(5.dp),
-                        color = Color(
-                            tag?.color?.toIntOrNull() ?: PrimaryColor.toArgb()
-                        ),
+                    ) {
+                        Row {
+                            Text(
+                                text = tag?.name.orEmpty(),
+                                modifier = Modifier.padding(5.dp),
+                                color = Color(
+                                    tag?.color?.toIntOrNull() ?: PrimaryColor.toArgb()
+                                ),
 
-                        )
+                                )
+                            val icon = iconByName(tag?.iconName.orEmpty())
+                            Icon(imageVector = icon, contentDescription = "")
+                        }
+                    }
                 }
             }
-        }
 
-    }
+        }
 //to convert color to String and vice versa
 //    val color=Color.Gray.toArgb().toString()
 //    Color(color.toIntOrNull()?: PrimaryColor.toArgb())
 
-}
+    }}

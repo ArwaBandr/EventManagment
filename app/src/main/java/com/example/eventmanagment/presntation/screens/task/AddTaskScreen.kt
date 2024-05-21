@@ -1,10 +1,9 @@
 package com.example.eventmanagment.presntation.screens.task
 
-import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.Row
+ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +14,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+ import androidx.compose.runtime.LaunchedEffect
+ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -34,7 +34,8 @@ import com.example.eventmanagment.ui.theme.PrimaryColor
 
 @Composable
 fun AddTaskScreen(navController: NavHostController, addTaskViewModel: AddTaskViewModel) {
-    val allTags = addTaskViewModel.allTags.collectAsState(initial = null)
+
+    val allTags = addTaskViewModel.allTags.collectAsState(initial = emptyList())
 
     val showStartTimeTimeDialog = remember {
         mutableStateOf(false)
@@ -44,7 +45,6 @@ fun AddTaskScreen(navController: NavHostController, addTaskViewModel: AddTaskVie
         mutableStateOf(false)
     }
     LazyColumn(modifier = Modifier
-        .fillMaxSize()
         .padding(horizontal = 16.dp)) {
         item {
             TaskHeaderView("Add Task"){
@@ -65,7 +65,8 @@ fun AddTaskScreen(navController: NavHostController, addTaskViewModel: AddTaskVie
                     Modifier.clickable {
                         navController.navigate(Screens.MainApp.DateDailog.rout)
                     })
-                })
+                })}
+        item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -87,6 +88,8 @@ fun AddTaskScreen(navController: NavHostController, addTaskViewModel: AddTaskVie
                     "Time To", Color.Gray, addTaskViewModel.endDate, isReadOnly = true,
                 )
             }
+        }
+        item {
             CustomTextField(
                 Modifier,
                 "Description",
@@ -94,15 +97,16 @@ fun AddTaskScreen(navController: NavHostController, addTaskViewModel: AddTaskVie
                 addTaskViewModel.describtion,
                 isReadOnly = false
             )
-
         }
+
         item {
-            AddTagsListView(allTags.value.orEmpty()){
-                addTaskViewModel.category.value= it.name
+            AddTagsListView(allTags.value.orEmpty(),navController){
+               // addTaskViewModel.category.value=it.name
+                addTaskViewModel.selectedTags.value = it
             }
         }
         item {
-            ButtonAddTask(addTaskViewModel)
+            ButtonAddTask(addTaskViewModel,navController)
         }
     }
     if (showStartTimeTimeDialog.value) {
@@ -128,7 +132,7 @@ fun AddTaskScreen(navController: NavHostController, addTaskViewModel: AddTaskVie
 }
 
 @Composable
-private fun ButtonAddTask(addTaskViewModel: AddTaskViewModel) {
+private fun ButtonAddTask(addTaskViewModel: AddTaskViewModel, navController: NavHostController) {
     Button(
         onClick = {
             addTaskViewModel.addTask()
@@ -136,7 +140,7 @@ private fun ButtonAddTask(addTaskViewModel: AddTaskViewModel) {
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(22.dp)
+            .padding(22.dp, bottom = 100.dp)
             .semantics {
                 testTag = "Add Task Button"
             },

@@ -1,59 +1,51 @@
 package com.example.eventmanagment.presntation.screens.task
 
-import TaskCard
-import android.view.RoundedCorner
+
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.CheckCircle
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.eventmanagment.R
+import com.example.eventmanagment.component.TaskCard
 import com.example.eventmanagment.component.TaskCategeryCard
-import com.example.eventmanagment.data.entity.Task
 import com.example.eventmanagment.data.entity.TaskType
 import com.example.eventmanagment.presntation.navigation.Screens
-import com.example.eventmanagment.ui.theme.Purple40
 import com.example.eventmanagment.ui.theme.textcolor
 import com.google.firebase.auth.FirebaseUser
 import java.time.LocalDate
 
 @Composable
 fun HomeScreen(
+    firebaseUser: FirebaseUser?,
     filterTasksViewModel: FilterTasksViewModel,
     navController: NavController
 ) {
@@ -65,14 +57,17 @@ fun HomeScreen(
     val onGoingTask = filterTasksViewModel.onGoingTasks.collectAsState(initial = null)
     val pendingTask = filterTasksViewModel.pendingTasks.collectAsState(initial = null)
 
-    val tasksList = filterTasksViewModel.filteredTask.value.collectAsState(initial = null)
+    val tasksList = filterTasksViewModel.taskWithTags
 
-    LazyColumn(modifier = Modifier.padding(horizontal = 16.dp)
-        .semantics {
-            contentDescription = "Home Screen"
-        }, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    LazyColumn(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .semantics {
+                contentDescription = "Home Screen"
+            }, verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
         item {
-            HeaderView()
+            HeaderView(firebaseUser)
             Spacer(modifier = Modifier.size(5.dp))
         }
         item {
@@ -92,7 +87,7 @@ fun HomeScreen(
                         title = TaskType.Completed.type,
                         tintColor = Color(0xFF7DC8E7),
                         totalTasksInCategory = completedTask.value?.first()?.tasks?.size.toString(),
-                        onClick = { },
+                        onClick = { navController.navigate("${Screens.MainApp.LisOfTasksScreen.rout}/${TaskType.Completed.type}")},
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.imac_2),
@@ -107,7 +102,7 @@ fun HomeScreen(
                         title = TaskType.Cancelled.type,
                         tintColor = Color(0xFFE77D7D),
                         totalTasksInCategory = cancelledTask.value?.first()?.tasks?.size.toString(),
-                        onClick = { },
+                        onClick = {navController.navigate("${Screens.MainApp.LisOfTasksScreen.rout}/${TaskType.Cancelled.type}") },
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.close_square),
@@ -128,7 +123,7 @@ fun HomeScreen(
                         title = TaskType.Pending.type,
                         tintColor = Color(0xFF7D88E7),
                         totalTasksInCategory = pendingTask.value?.first()?.tasks?.size.toString(),
-                        onClick = { },
+                        onClick = {navController.navigate("${Screens.MainApp.LisOfTasksScreen.rout}/${TaskType.Pending.type}") },
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.time_square),
@@ -143,7 +138,7 @@ fun HomeScreen(
                         title = TaskType.OnGoing.type,
                         tintColor = Color(0xFF81E89E),
                         totalTasksInCategory = onGoingTask.value?.first()?.tasks?.size.toString(),
-                        onClick = { },
+                        onClick = {navController.navigate("${Screens.MainApp.LisOfTasksScreen.rout}/${TaskType.OnGoing.type}") },
                     ) {
                         Icon(
                             imageVector = Icons.TwoTone.CheckCircle,
@@ -158,56 +153,87 @@ fun HomeScreen(
         }
         //tasks list of the day
         item {
-            Row (horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
                     text = "Today Tasks",
                     fontSize = 24.sp,
                     color = textcolor,
                     fontWeight = FontWeight.Bold
                 )
+
                 Text(text = "View all", color = textcolor, modifier = Modifier.clickable {
                     navController.navigate(Screens.MainApp.TaskByDate.rout)
                 })
+
             }
         }
-        items(tasksList?.value.orEmpty()){
-            TaskCard(taskTitle = it.title, timeFrom =it.timeFrom , timeTo =it.timeTo , tag = null)}
+        items(tasksList.value) {
+            Divider(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp), color = Color.Gray, thickness = 5.dp
+            )
+            TaskCard(
+                taskTitle = it.task.title,
+                timeFrom = it.task.timeFrom,
+                timeTo = it.task.timeTo,
+                tag = it.tag
+            )
+        }
+        item {
+            Spacer(modifier = Modifier.padding(bottom = 100.dp))
 
+        }
     }
 }
 
 @Composable
-private fun HeaderView() {
+private fun HeaderView(firebaseUser: FirebaseUser?) {
     Column(
         modifier = Modifier
             .wrapContentWidth()
             .padding(30.dp)
     ) {
+
         Row(
             modifier = Modifier
                 .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Hi, Stevn",
+                text = firebaseUser?.displayName.toString(),
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 color = textcolor
             )
-            Icon(
-                painter = painterResource(id = R.drawable.google_icon),
-                contentDescription = ""
-            )
+            if (firebaseUser?.photoUrl.toString().isEmpty()) {
+                Icon(
+                    painter = painterResource(id = R.drawable.google_icon),
+                    contentDescription = ""
+                )
+            } else {
+                AsyncImage(
+                    model = firebaseUser?.photoUrl,
+                    contentDescription = "user photo",
+                    modifier = Modifier
+                        .height(42.dp)
+                        .width(42.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
         Row {
             Text(text = "Let's make this day productive", color = Color.Gray)
         }
-            Text(
-                text = "My Task",
-                fontSize = 24.sp,
-                color = textcolor,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 10.dp)
-            )
+        Text(
+            text = "My Task",
+            fontSize = 24.sp,
+            color = textcolor,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top = 10.dp)
+        )
 
     }
 }

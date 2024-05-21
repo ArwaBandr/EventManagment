@@ -18,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.eventmanagment.presntation.navigation.BottomNavigationItem
@@ -51,6 +53,9 @@ fun BottomBar(navController: NavHostController) {
                             bottomNavigationItem.icon,
                             modifier = Modifier
                                 .size(75.dp)
+                                .semantics {
+                                    testTag="Navigate To Screen"
+                                }
                                 .clickable {
                                     navigationSelectedItem.intValue = index
                                     navController.navigate(bottomNavigationItem.route) {
@@ -58,6 +63,7 @@ fun BottomBar(navController: NavHostController) {
                                         launchSingleTop = true
                                         restoreState = true
                                     }
+
                                 },
                             tint = PrimaryColor,
                             contentDescription = ""
@@ -65,7 +71,11 @@ fun BottomBar(navController: NavHostController) {
                     } else {
                         Icon(
                             bottomNavigationItem.icon,
-                            modifier = Modifier.clickable {
+                            modifier = Modifier
+                                .semantics {
+                                testTag=bottomNavigationItem.route
+                            }
+                                . clickable {
                                 navigationSelectedItem.intValue =index
                                 navController.navigate(bottomNavigationItem.route){
                                     popUpToTop(navController)

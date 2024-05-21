@@ -14,24 +14,10 @@ import javax.inject.Inject
 class TaskViewModel @Inject constructor(private val taskRepositry: TaskRepositry):ViewModel(){
     val tasks =taskRepositry.getAllTasks()
     val tags =taskRepositry.getAllTags()
-    val taskByTags =taskRepositry.getTagsWithTag("Personal")
+    //val taskByTags =taskRepositry.getTagsWithTag("Personal")
 
     init {
         viewModelScope.launch {
-
-            taskRepositry.insertTag(
-                Tags(
-                    "Work",
-                    "color"
-                )
-
-            )
-            taskRepositry.insertTag(
-                Tags(
-                    "Work",
-                    "color"
-                )
-            )
 
             taskRepositry.insertTask(
                 Task(

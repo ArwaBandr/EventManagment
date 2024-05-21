@@ -1,17 +1,25 @@
 package com.example.eventmanagment.data.repositry
 
 import com.example.eventmanagment.data.dao.TaskDao
+import com.example.eventmanagment.data.entity.TagWithTaskLists
 import com.example.eventmanagment.data.entity.Tags
 import com.example.eventmanagment.data.entity.Task
-import com.example.eventmanagment.data.entity.TaskWithTagLists
+import com.example.eventmanagment.data.entity.TaskTagCrossRef
+import com.example.eventmanagment.data.entity.TaskWithTags
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class TaskRepositry @Inject constructor(private val taskDao: TaskDao) {
 
-    suspend fun insertTask(task: Task){
-        taskDao.addTask(task = task)
+    suspend fun insertTaskTagCrossRefs(taskTagCrossRef: List<TaskTagCrossRef>){
+        taskDao.insertTaskTagCross(taskTagCrossRef)
+
     }
+
+    suspend fun insertTask(task: Task):Long{
+       return taskDao.addTask(task = task)
+    }
+
 
     suspend fun deletTask(task: Task){
         taskDao.deleteTask(task = task)
@@ -29,7 +37,7 @@ class TaskRepositry @Inject constructor(private val taskDao: TaskDao) {
         taskDao.deletTag(tags)
     }
 
-    fun getTagsWithTag(tagName: String):Flow<List<TaskWithTagLists>>{
+    fun getTagsWithTag(tagName: String):Flow<List<TagWithTaskLists>>{
         return taskDao.getTagsWithTask(tagName)
     }
 
@@ -41,9 +49,15 @@ class TaskRepositry @Inject constructor(private val taskDao: TaskDao) {
          taskDao.upsertTagList(tagList)
     }
 
-     fun sortTaskByCreationDate(date: String):Flow<List<Task>>{
+     fun sortTaskByCreationDate(date: String):Flow<List<TaskWithTags>>{
         return taskDao.sortByCreationDate(date)
     }
-//    fun getTaskDate():Boolean{
-//    }
+    fun getTagsWithTasks():Flow<List<TaskWithTags>>{
+        return taskDao.getTasksWithTags()
+    }
+
+    fun getTagsWithTasksList()= taskDao.getTagWithTaskLists()
+
+
+
 }

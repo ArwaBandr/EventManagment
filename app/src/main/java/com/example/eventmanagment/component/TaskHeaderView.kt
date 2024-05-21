@@ -26,7 +26,7 @@ import com.example.eventmanagment.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskHeaderView(title: String,onBackClicked: () -> Boolean) {
+fun TaskHeaderView(title: String, onBackClicked: () -> Boolean) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
