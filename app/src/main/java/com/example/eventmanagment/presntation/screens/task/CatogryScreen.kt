@@ -13,15 +13,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +40,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.eventmanagment.R
 import com.example.eventmanagment.component.DropDownMenu
+import com.example.eventmanagment.component.MenuItem
 import com.example.eventmanagment.component.TagCard
 import com.example.eventmanagment.presntation.navigation.Screens
 import com.example.eventmanagment.ui.theme.PrimaryColor
@@ -51,12 +50,13 @@ import com.google.firebase.auth.FirebaseUser
 fun CategoryScreen(
     navController: NavHostController,
     firbaseUser: FirebaseUser?,
-    viewModel: FilterTasksViewModel
+    viewModel: FilterTasksViewModel,
+    logout: () -> Unit,
 ) {
 
     var tagWithTaskLists = viewModel.tagWithTasks.value
 //.verticalScroll(rememberScrollState())
-    var expanded by remember {
+    var expanded = remember {
         mutableStateOf(false)
     }
     Column(
@@ -76,10 +76,30 @@ fun CategoryScreen(
                     imageVector = Icons.Outlined.MoreVert,
                     contentDescription = "",
                     modifier = Modifier.clickable {
-                      // DropDownMenu(taskObj = , navController =navController )
+                        expanded.value = true
                     })
 
+                val item2 = listOf(
+                    MenuItem(
+                        title = "Settings",
+                        Icon = Icons.Outlined.Settings,
+                        onClick = {
+                            navController.navigate(Screens.MainApp.SettingsScreen.rout)
+                        }
+                    ),
+                    MenuItem(
+                        title = "Logout",
+                        Icon = Icons.Outlined.ExitToApp,
+                        onClick = {
+                            logout.invoke()
+                        }
+                    )
+                )
+                if (expanded.value) {
+                    DropDownMenu(items2 = item2, navController = navController,expanded)
+                }
             }
+
 
         }
 

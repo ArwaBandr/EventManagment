@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 
@@ -75,7 +76,7 @@ fun TaskByDatePicker(filterTasksViewModel: FilterTasksViewModel) {
                 Column {
                     Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                         Text(
-                            text = "Task",
+                            text = stringResource(id = R.string.task),
                             style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(start = 4.dp),
                             color = textcolor,
@@ -122,7 +123,7 @@ fun Day(day: WeekDay, isSelected: Boolean,onClick: (LocalDate) -> Unit) {
             .background(color = if (isSelected) Purple40 else Color.Transparent)
             .clickable(
                 // enabled = day.position == DayPosition.MonthDate,
-                onClick = {  onClick.invoke(day.date)}
+                onClick = { onClick.invoke(day.date) }
             ), // This is important for square sizing!
         contentAlignment = Alignment.Center
     ) {

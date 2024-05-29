@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.eventmanagment.R
 import com.example.eventmanagment.data.entity.Tags
 import com.example.eventmanagment.getIconName
 import com.example.eventmanagment.iconByName
@@ -54,7 +56,7 @@ fun AddTagsListView(
            // .padding(end = 20.dp, start = 20.dp)
     ) {
         Text(
-            text = "Tags",
+            text = stringResource(id = R.string.tags),
             modifier = Modifier
                 .padding(5.dp),
             style = TextStyle(color = Color.Gray, fontSize = 16.sp)
@@ -107,7 +109,7 @@ fun AddTagsListView(
 
     }
     Text(
-        text = "+ Add new tag",
+        text = stringResource(id = R.string.add_new_tag),
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp)

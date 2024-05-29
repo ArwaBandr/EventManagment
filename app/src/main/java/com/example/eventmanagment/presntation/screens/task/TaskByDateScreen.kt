@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,7 +75,7 @@ fun TaskByDatScreen(filterTasksViewModel: FilterTasksViewModel, navController: N
                 .padding(top = 7.dp, start = 4.dp, end = 4.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Today", color = textcolor, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+            Text(text = stringResource(id = R.string.today), color = textcolor, fontSize = 17.sp, fontWeight = FontWeight.Bold)
             Text(text = "${countHour.toString()} h ${countMinutes.toString()} m")
         }
         LazyColumn(
@@ -125,7 +126,7 @@ fun TaskByDatScreen(filterTasksViewModel: FilterTasksViewModel, navController: N
                             painter = painterResource(id = R.drawable.no_tasks_image),
                             contentDescription = ""
                         )
-                        Text(text = "No tasks for the day")
+                        Text(text = stringResource(id = R.string.no_tasks))
                     }
                 }
 

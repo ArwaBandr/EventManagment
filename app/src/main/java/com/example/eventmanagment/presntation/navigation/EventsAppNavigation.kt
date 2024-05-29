@@ -84,7 +84,7 @@ fun NavGraphBuilder.mainAppNavigation(
         }
         composable(Screens.MainApp.TaskByDate.rout) {
             val viewModel = hiltViewModel<FilterTasksViewModel>()
-            TaskByDatScreen(viewModel,navController)
+            TaskByDatScreen(viewModel, navController)
 
 //            val viewModel: TaskViewModel = hiltViewModel()
 //            LazyColumn(
@@ -118,8 +118,8 @@ fun NavGraphBuilder.mainAppNavigation(
 //                    Text(text = "SignOut")
 //                }
 //            }
-val viewModel= hiltViewModel<FilterTasksViewModel>()
-            CategoryScreen(navController,firbaseUser.invoke(),viewModel)
+            val viewModel = hiltViewModel<FilterTasksViewModel>()
+            CategoryScreen(navController, firbaseUser.invoke(), viewModel, logout)
         }
         composable(Screens.MainApp.AddScreen.rout) {
             val viewmodel: AddTaskViewModel = hiltViewModel()
@@ -169,21 +169,31 @@ val viewModel= hiltViewModel<FilterTasksViewModel>()
                 navController = navController
             )
         }
-        dialog("${Screens.MainApp.DropDownMenu.rout}/{taskId}",dialogProperties = DialogProperties(
-            dismissOnClickOutside = true,
-            dismissOnBackPress = true))
-         {
-          // DropDownMenu(){true}
+        dialog(
+            "${Screens.MainApp.DropDownMenu.rout}/{taskId}", dialogProperties = DialogProperties(
+                dismissOnClickOutside = true,
+                dismissOnBackPress = true
+            )
+        )
+        {
+            // DropDownMenu(){true}
         }
 
-        composable("${Screens.MainApp.EditTaskScreen.rout}/{taskID}", arguments = listOf(navArgument("taskID"){
-            type= NavType.LongType
-        })){
+        composable(
+            "${Screens.MainApp.EditTaskScreen.rout}/{taskID}",
+            arguments = listOf(navArgument("taskID") {
+                type = NavType.LongType
+            })
+        ) {
             val ViewModel = hiltViewModel<AddTaskViewModel>()
-            EditTask(it.arguments?.getLong("taskID")?:0L, navController =navController ,ViewModel)
+            EditTask(
+                it.arguments?.getLong("taskID") ?: 0L,
+                navController = navController,
+                ViewModel
+            )
         }
 
-        composable(Screens.MainApp.SettingsScreen.rout){
+        composable(Screens.MainApp.SettingsScreen.rout) {
             SettingScreen(navController = navController)
         }
     }

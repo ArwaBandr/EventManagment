@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -43,7 +44,7 @@ import com.example.eventmanagment.component.LoginWithGoogle
 @Composable
 fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
     Text(
-        text = "Login",
+        text = stringResource(id = R.string.login),
         style = MaterialTheme.typography.titleLarge,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
@@ -65,7 +66,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
             onValueChange = { userEmail = it },
             label = {
                 Text(
-                    text = "Email ID or Username",
+                    text = stringResource(id = R.string.email_or_username),
                     style = TextStyle(color = Color.Gray),
                     textAlign = TextAlign.Start
                 )
@@ -88,7 +89,7 @@ keyboardOptions= KeyboardOptions(keyboardType = KeyboardType.Email),
         TextField(
             value = userPassword,
             onValueChange = { userPassword = it },
-            label = { Text(text = "Password", style = TextStyle(color = Color.Gray)) },
+            label = { Text(text = stringResource(id =R.string.password ), style = TextStyle(color = Color.Gray)) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.password_icon),
@@ -106,9 +107,13 @@ keyboardOptions= KeyboardOptions(keyboardType = KeyboardType.Email),
 
         )
 
-        Text(text = "forget password?", style = TextStyle(Color.Blue), modifier = Modifier
+        Text(text = stringResource(id = R.string.forget_passowrd), style = TextStyle(Color.Blue), modifier = Modifier
             .padding(start = 230.dp, bottom = 80.dp)
-            .clickable {if(userEmail.isNotEmpty()){viewModel.resetPassword(userEmail)}})
+            .clickable {
+                if (userEmail.isNotEmpty()) {
+                    viewModel.resetPassword(userEmail)
+                }
+            })
 val context = LocalContext.current
         Button(
             onClick = {
@@ -128,10 +133,10 @@ val context = LocalContext.current
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
 
         ) {
-            Text(text = "Login", color = Color.White)
+            Text(text = stringResource(id = R.string.login), color = Color.White)
         }
         Text(
-            text = "or with", modifier = Modifier
+            text = stringResource(id = R.string.or_with), modifier = Modifier
                 .padding(top = 50.dp)
                 .align(Alignment.CenterHorizontally),
             color = Color.Gray

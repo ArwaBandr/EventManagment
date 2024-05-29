@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Event Management</string>
+    <string name="welcome_msg">اجعل هذا اليوم اكثر انتاجية</string>
+    <string name="my_task"> مهامي</string>
+    <string name="view_all">عرض الكل </string>
+    <string name="today_tasks">مهام اليوم</string>
+    <string name="today">اليوم</string>
+    <string name="no_tasks">لا مهام في هذا اليوم</string>
+    <string name="task">مهمة</string>
+    <string name="add_task">اضافة مهام</string>
+    <string name="title">عنوان</string>
+    <string name="date">تاريخ</string>
+    <string name="time_from"> من الساعة</string>
+    <string name="time_to">الى الساعة</string>
+    <string name="description">الوصف</string>
+    <string name="tags">التصنيفات</string>
+    <string name="pending">معلق</string>
+    <string name="on_going">مهمة حالية</string>
+    <string name="cancelled">ملغى</string>
+    <string name="completed">مكتمل</string>
+    <string name="create">انشاء</string>
+    <string name="add_new_tag">+ اضف تصنيف جديد</string>
+    <string name="search_for_task">"ابحث عن مهمة"</string>
+    <string name="login">تسجيل دخول</string>
+    <string name="email_or_username">البريد او اسم المستخدم</string>
+    <string name="password">"كلمة المرور"</string>
+    <string name="forget_passowrd">نسيت كلمة المرور؟</string>
+    <string name="fill_info">الرجاء اكمال كلمة المرور والبريد</string>
+    <string name="or_with">او من خلال</string>>
+    <string name="sign_up">انشاء حساب</string>
+
+</resources>

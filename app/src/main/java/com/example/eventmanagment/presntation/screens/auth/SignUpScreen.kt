@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -48,7 +49,7 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
 
         ) {
         Text(
-            text = "Sign Up",
+            text = stringResource(id = R.string.sign_up),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(start = 50.dp, top = 110.dp, bottom = 50.dp),
             color = MaterialTheme.colorScheme.primary
@@ -71,7 +72,7 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
 
             TextField(
                 value = emailId, onValueChange = { emailId = it },
-                label = { Text(text = "Email", color = Color.Gray) },
+                label = { Text(text = stringResource(id = R.string.email_or_username), color = Color.Gray) },
                // shape = RoundedCornerShape(10.dp),
                 leadingIcon = {
                     Icon(
@@ -90,7 +91,7 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
             TextField(
                 value = passowrd,
                 onValueChange = { passowrd = it },
-                label = { Text(text = "Password", style = TextStyle(color = Color.Gray)) },
+                label = { Text(text = stringResource(id = R.string.password), style = TextStyle(color = Color.Gray)) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.password_icon),
@@ -123,10 +124,10 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
 
             ) {
-                Text(text = "Create" , color = Color.White)
+                Text(text = stringResource(id = R.string.create) , color = Color.White)
             }
             Text(
-                text = "or with", modifier = Modifier
+                text = stringResource(id = R.string.or_with), modifier = Modifier
                     .padding(top = 50.dp)
                     .align(Alignment.CenterHorizontally),
                 color = Color.Gray

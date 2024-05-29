@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,31 +33,31 @@ import com.example.eventmanagment.presntation.screens.task.FilterTasksViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+//fun DropDownMenu(taskObj: Task, navController: NavHostController) {
 @Composable
-fun DropDownMenu(taskObj: Task, navController: NavHostController) {
+fun DropDownMenu(items2:List<MenuItem>, navController: NavHostController, expanded: MutableState<Boolean>) {
     val viewModel = hiltViewModel<FilterTasksViewModel>()
-    var expanded by remember { mutableStateOf(true) }
+    //var expanded by remember { mutableStateOf(true) }
     val items = mapOf(
         Icons.Outlined.Close to "Disable",
         Icons.Outlined.Settings to "Edit",
         Icons.Outlined.Delete to "Delete"
     )
 
-    val items2 = listOf(
-        MenuItem("Disable", Icons.Outlined.Close, { true }),
-
-        MenuItem(
-            "Edit",
-            Icons.Outlined.Settings,
-            { navController.navigate("${Screens.MainApp.EditTaskScreen.rout}/${taskObj.taskId}") }),
-
-        MenuItem("Delete", Icons.Outlined.Delete,
-            {
-                viewModel.deletTask(taskObj)
-            }
-        )
-    )
+//    val items2 = listOf(
+//        MenuItem("Disable", Icons.Outlined.Close, { true }),
+//
+//        MenuItem(
+//            "Edit",
+//            Icons.Outlined.Settings,
+//            { navController.navigate("${Screens.MainApp.EditTaskScreen.rout}/${taskObj.taskId}") }),
+//
+//        MenuItem("Delete", Icons.Outlined.Delete,
+//            {
+//                viewModel.deletTask(taskObj)
+//            }
+//        )
+//    )
 
 
     var selectedIndex by remember { mutableStateOf(0) }
@@ -67,9 +68,9 @@ fun DropDownMenu(taskObj: Task, navController: NavHostController) {
             .background(Color.White)
     ) {
         DropdownMenu(
-            expanded = expanded,
+            expanded = expanded.value,
             onDismissRequest = {
-                expanded = false
+                expanded.value = false
                 //navController.popBackStack()
             },
             offset = DpOffset(10.dp, 10.dp),

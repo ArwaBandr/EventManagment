@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -86,7 +87,8 @@ fun HomeScreen(
                 ) {
                     TaskCategeryCard(
                         height = 220.dp,
-                        title = TaskType.Completed.type,
+                        //title = TaskType.Completed.type,
+                        title = stringResource(id = R.string.completed),
                         tintColor = Color(0xFF7DC8E7),
                         totalTasksInCategory = completedTask.value?.first()?.tasks?.size.toString(),
                         onClick = { navController.navigate("${Screens.MainApp.LisOfTasksScreen.rout}/${TaskType.Completed.type}")},
@@ -101,7 +103,8 @@ fun HomeScreen(
 
                     TaskCategeryCard(
                         height = 190.dp,
-                        title = TaskType.Cancelled.type,
+                        //title = TaskType.Cancelled.type,
+                        title = stringResource(id = R.string.cancelled),
                         tintColor = Color(0xFFE77D7D),
                         totalTasksInCategory = cancelledTask.value?.first()?.tasks?.size.toString(),
                         onClick = {navController.navigate("${Screens.MainApp.LisOfTasksScreen.rout}/${TaskType.Cancelled.type}") },
@@ -122,7 +125,7 @@ fun HomeScreen(
                 ) {
                     TaskCategeryCard(
                         height = 190.dp,
-                        title = TaskType.Pending.type,
+                        title = stringResource(id = R.string.pending),
                         tintColor = Color(0xFF7D88E7),
                         totalTasksInCategory = pendingTask.value?.first()?.tasks?.size.toString(),
                         onClick = {navController.navigate("${Screens.MainApp.LisOfTasksScreen.rout}/${TaskType.Pending.type}") },
@@ -137,7 +140,7 @@ fun HomeScreen(
                     }
                     TaskCategeryCard(
                         height = 220.dp,
-                        title = TaskType.OnGoing.type,
+                        title = stringResource(id = R.string.on_going),
                         tintColor = Color(0xFF81E89E),
                         totalTasksInCategory = onGoingTask.value?.first()?.tasks?.size.toString(),
                         onClick = {navController.navigate("${Screens.MainApp.LisOfTasksScreen.rout}/${TaskType.OnGoing.type}") },
@@ -160,13 +163,13 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Today Tasks",
+                    text = stringResource(id = R.string.today_tasks),
                     fontSize = 24.sp,
                     color = textcolor,
                     fontWeight = FontWeight.Bold
                 )
 
-                Text(text = "View all", color = textcolor, modifier = Modifier.clickable {
+                Text(text = stringResource(id = R.string.view_all), color = textcolor, modifier = Modifier.clickable {
                     navController.navigate(Screens.MainApp.TaskByDate.rout)
                 })
 
@@ -229,10 +232,10 @@ private fun HeaderView(firebaseUser: FirebaseUser?) {
             }
         }
         Row {
-            Text(text = "Let's make this day productive", color = Color.Gray)
+            Text(text = stringResource(id = R.string.welcome_msg), color = Color.Gray)
         }
         Text(
-            text = "My Task",
+            text = stringResource(id = R.string.my_task),
             fontSize = 24.sp,
             color = textcolor,
             fontWeight = FontWeight.Bold,

@@ -16,6 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -28,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -69,10 +73,7 @@ fun TaskCard(taskObj: Task,taskTitle: String, timeFrom: String?, timeTo: String?
                 Modifier
                     .fillMaxWidth()
                     .padding(15.dp)
-                    .clickable {
-                     //   navController.navigate("${Screens.MainApp.DropDownMenu.rout}/${taskObj.taskId}")
-
-                    }, Arrangement.SpaceBetween
+                    , Arrangement.SpaceBetween
 
             ) {
 
@@ -114,7 +115,7 @@ fun TaskCard(taskObj: Task,taskTitle: String, timeFrom: String?, timeTo: String?
                     }
                 }
                 //box
-                var expanded by remember { mutableStateOf(false) }
+                var expanded = remember { mutableStateOf(false) }
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = "",
@@ -123,7 +124,7 @@ fun TaskCard(taskObj: Task,taskTitle: String, timeFrom: String?, timeTo: String?
                         .size(24.dp)
                         .clickable {
                             // navController.navigate("${Screens.MainApp.EditTaskScreen.rout}/${taskObj.taskId}")
-                            expanded = true
+                            expanded.value = true
                         }
                 )
 //                if(expanded) {
@@ -132,8 +133,22 @@ fun TaskCard(taskObj: Task,taskTitle: String, timeFrom: String?, timeTo: String?
 //                        filterTasksViewModel.deletTask(taskObj)}
 //                    }
 
-                if (expanded) {
-                    DropDownMenu(taskObj, navController)
+                if (expanded.value) {
+                    val items2 = listOf(
+                        MenuItem("Disable", Icons.Outlined.Close, { true }),
+
+                        MenuItem(
+                            "Edit",
+                            Icons.Outlined.Settings,
+                            { navController.navigate("${Screens.MainApp.EditTaskScreen.rout}/${taskObj.taskId}") }),
+
+                        MenuItem("Delete", Icons.Outlined.Delete,
+                            {
+                                filterTasksViewModel.deletTask(taskObj)
+                            }
+                        )
+                    )
+                    DropDownMenu(items2 = items2, navController,expanded)
                     }
                 }
 
@@ -180,4 +195,7 @@ fun TaskCard(taskObj: Task,taskTitle: String, timeFrom: String?, timeTo: String?
 //    Color(color.toIntOrNull()?: PrimaryColor.toArgb())
 
 //    }
+
+
 }
+
