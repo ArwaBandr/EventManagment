@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.eventmanagment.R
 import com.example.eventmanagment.component.TaskCard
@@ -47,10 +48,11 @@ import java.time.LocalDate
 fun HomeScreen(
     firebaseUser: FirebaseUser?,
     filterTasksViewModel: FilterTasksViewModel,
-    navController: NavController
+    navController: NavHostController
 ) {
     LaunchedEffect(Unit) {
         filterTasksViewModel.filterTaskByDate(LocalDate.now().toString())
+        //filterTasksViewModel.getTaskwithTags()
     }
     val completedTask = filterTasksViewModel.completedTasks.collectAsState(initial = null)
     val cancelledTask = filterTasksViewModel.cancelledTasks.collectAsState(initial = null)
@@ -177,6 +179,7 @@ fun HomeScreen(
                     .padding(5.dp), color = Color.Gray, thickness = 5.dp
             )
             TaskCard(
+                taskObj = it.task,
                 taskTitle = it.task.title,
                 timeFrom = it.task.timeFrom,
                 timeTo = it.task.timeTo,

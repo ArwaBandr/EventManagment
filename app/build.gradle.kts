@@ -127,4 +127,8 @@ dependencies {
 
     // The compose calendar library
     implementation("com.kizitonwose.calendar:compose:<latest-version>")
+
+    // for language translation
+    implementation("com.google.mlkit:translate:17.0.0")
+
 }

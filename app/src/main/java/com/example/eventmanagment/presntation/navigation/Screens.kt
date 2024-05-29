@@ -24,6 +24,10 @@ sealed class Screens(val rout: String) {
         data object LisOfTasksScreen : Screens("list_of_task_screen")
         data object DropDownMenu :Screens("drop_down_menu_screen")
 
+        data object EditTaskScreen:Screens("edit_task_screen")
+
+        data object  SettingsScreen :Screens("settings_screen")
+
     }
 
     data object Authentication : Screens("authGraph") {

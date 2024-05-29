@@ -46,7 +46,7 @@ fun AddNewTag(addTaskViewModel: AddTaskViewModel,navController:NavController) {
         Column(Modifier.wrapContentSize(), verticalArrangement = Arrangement.SpaceBetween) {
             //Text(text = "New Tag", )
             TaskHeaderView(title = "New Tag") {
-                true
+                navController.popBackStack()
             }
             CustomTextField(
                 label = "tag name",

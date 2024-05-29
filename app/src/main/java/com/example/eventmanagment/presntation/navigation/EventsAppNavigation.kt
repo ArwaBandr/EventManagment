@@ -3,8 +3,6 @@ package com.example.eventmanagment.presntation.navigation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,7 +20,6 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.eventmanagment.component.DatePickerr
-import com.example.eventmanagment.component.DropDownMenu
 import com.example.eventmanagment.presntation.screens.auth.AuthViewModel
 import com.example.eventmanagment.presntation.screens.auth.LoginScreen
 import com.example.eventmanagment.presntation.screens.auth.SignUpScreen
@@ -30,9 +27,12 @@ import com.example.eventmanagment.presntation.screens.auth.SplashScreen
 import com.example.eventmanagment.presntation.screens.task.AddNewTag
 import com.example.eventmanagment.presntation.screens.task.AddTaskScreen
 import com.example.eventmanagment.presntation.screens.task.AddTaskViewModel
+import com.example.eventmanagment.presntation.screens.task.CategoryScreen
+import com.example.eventmanagment.presntation.screens.task.EditTask
 import com.example.eventmanagment.presntation.screens.task.FilterTasksViewModel
 import com.example.eventmanagment.presntation.screens.task.HomeScreen
 import com.example.eventmanagment.presntation.screens.task.ListOfTasksScreen
+import com.example.eventmanagment.presntation.screens.task.SettingScreen
 import com.example.eventmanagment.presntation.screens.task.TaskByDatScreen
 import com.google.firebase.auth.FirebaseUser
 
@@ -109,15 +109,17 @@ fun NavGraphBuilder.mainAppNavigation(
         }
 
         composable(Screens.MainApp.CategoryScreen.rout) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.Cyan)
-            ) {
-                Button(onClick = { logout.invoke() }) {
-                    Text(text = "SignOut")
-                }
-            }
+//            Column(
+//                Modifier
+//                    .fillMaxSize()
+//                    .background(Color.Cyan)
+//            ) {
+//                Button(onClick = { logout.invoke() }) {
+//                    Text(text = "SignOut")
+//                }
+//            }
+val viewModel= hiltViewModel<FilterTasksViewModel>()
+            CategoryScreen(navController,firbaseUser.invoke(),viewModel)
         }
         composable(Screens.MainApp.AddScreen.rout) {
             val viewmodel: AddTaskViewModel = hiltViewModel()
@@ -167,10 +169,22 @@ fun NavGraphBuilder.mainAppNavigation(
                 navController = navController
             )
         }
-        dialog(Screens.MainApp.DropDownMenu.rout,dialogProperties = DialogProperties(
+        dialog("${Screens.MainApp.DropDownMenu.rout}/{taskId}",dialogProperties = DialogProperties(
             dismissOnClickOutside = true,
-            dismissOnBackPress = true) ){
-           DropDownMenu(navController)
+            dismissOnBackPress = true))
+         {
+          // DropDownMenu(){true}
+        }
+
+        composable("${Screens.MainApp.EditTaskScreen.rout}/{taskID}", arguments = listOf(navArgument("taskID"){
+            type= NavType.LongType
+        })){
+            val ViewModel = hiltViewModel<AddTaskViewModel>()
+            EditTask(it.arguments?.getLong("taskID")?:0L, navController =navController ,ViewModel)
+        }
+
+        composable(Screens.MainApp.SettingsScreen.rout){
+            SettingScreen(navController = navController)
         }
     }
 }

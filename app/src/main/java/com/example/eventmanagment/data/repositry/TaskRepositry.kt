@@ -52,12 +52,19 @@ class TaskRepositry @Inject constructor(private val taskDao: TaskDao) {
      fun sortTaskByCreationDate(date: String):Flow<List<TaskWithTags>>{
         return taskDao.sortByCreationDate(date)
     }
-    fun getTagsWithTasks():Flow<List<TaskWithTags>>{
+    fun getTaskWithTasgs():Flow<List<TaskWithTags>>{
         return taskDao.getTasksWithTags()
     }
 
     fun getTagsWithTasksList()= taskDao.getTagWithTaskLists()
 
+    suspend fun selectedTaskwithTags(taskID:Long)=taskDao.getTasksById(taskID)
 
+    suspend fun insertTaskWithTags(task: Task, tags:List<Tags>) =taskDao.insertTaskWithTags(task,tags)
 
+    suspend fun searchForTasks(taskTitle:String)= taskDao.searchForTasks(taskTitle)
+
+    suspend fun searchByTag(tagTitle: String)=taskDao.searchByTag(tagTitle)
+
+    suspend fun searchBoth(query:String) =taskDao.searchBoth(query)
 }

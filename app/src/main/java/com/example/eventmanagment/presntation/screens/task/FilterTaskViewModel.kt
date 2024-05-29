@@ -13,6 +13,7 @@ import com.example.eventmanagment.data.repositry.TaskRepositry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
@@ -22,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FilterTasksViewModel @Inject constructor(val taskRepositry: TaskRepositry) : ViewModel() {
     // val filteredTask = mutableStateOf(taskRepositry.getAllTasks())
-   // val filteredTask = mutableStateOf<List<Task>>(emptyList())
+    // val filteredTask = mutableStateOf<List<Task>>(emptyList())
 
     val tags = taskRepositry.getAllTags()
     val tasks = mutableStateOf<List<Task>>(emptyList())
@@ -32,8 +33,14 @@ class FilterTasksViewModel @Inject constructor(val taskRepositry: TaskRepositry)
     val completedTasks = taskRepositry.getTagsWithTag(TaskType.Completed.type)
     val onGoingTasks = taskRepositry.getTagsWithTag(TaskType.OnGoing.type)
     val tagWithTasks = mutableStateOf<List<TagWithTaskLists>>(emptyList())
-     val taskWithTags =  mutableStateOf<List<TaskWithTags>> (emptyList())
+
+    // val taskWithTags =  mutableStateOf<List<TaskWithTags>> (emptyList())
+    val taskWithTags = mutableStateOf<List<TaskWithTags>>(emptyList())
     val queryTagwithTasks = mutableStateOf<List<TagWithTaskLists>>(emptyList())
+
+    var searchedTasks = mutableStateOf<List<TaskWithTags>>(emptyList())
+    var searchedByTag = mutableStateOf<List<TagWithTaskLists>>(emptyList())
+
     init {
         //add base tags
         viewModelScope.launch {
@@ -48,8 +55,8 @@ class FilterTasksViewModel @Inject constructor(val taskRepositry: TaskRepositry)
     fun filterTaskByDate(date: String) {
         viewModelScope.launch {
             taskRepositry.sortTaskByCreationDate(date).collect {
-              //  filteredTask.value = it
-                taskWithTags.value=it
+                //  filteredTask.value = it
+                taskWithTags.value = it
             }
         }
     }
@@ -63,14 +70,47 @@ class FilterTasksViewModel @Inject constructor(val taskRepositry: TaskRepositry)
 
     }
 
-    fun getListOfTasksByTagName(tagName:String) {
+    fun getListOfTasksByTagName(tagName: String) {
         viewModelScope.launch {
-        taskRepositry.getTagsWithTag(tagName).collect{
-            queryTagwithTasks.value=it
-        }
+            taskRepositry.getTagsWithTag(tagName).collect {
+                queryTagwithTasks.value = it
+            }
         }
     }
-    suspend fun deletTask(task: Task){
-        taskRepositry.deletTask(task)
+
+     fun deletTask(task: Task) {
+        viewModelScope.launch{
+            taskRepositry.deletTask(task)
+
+        }
+
     }
+
+    suspend fun deletTag(tags: Tags) {
+
+    }
+
+    suspend fun getTaskwithTags() {
+        taskRepositry.getTaskWithTasgs().collect {
+            taskWithTags.value = it
+        }
+    }
+
+    fun searchForTasks(taskTitle: String) {
+        viewModelScope.launch {
+            taskRepositry.searchForTasks(taskTitle).collect {
+                searchedTasks.value = it
+            }
+        }
+
+    }
+
+
+    fun SearchTaskAndTags(query: String) {
+        viewModelScope.launch {
+            searchedTasks.value = taskRepositry.searchBoth(query).taskWithTags
+            searchedByTag.value=taskRepositry.searchBoth(query).tagWithTaskLists
+        }
+    }
+
 }

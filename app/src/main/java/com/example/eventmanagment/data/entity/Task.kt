@@ -19,28 +19,33 @@ import com.example.eventmanagment.ui.theme.LightRed
 data class Task(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "task_id")
-    var taskId: Long? =null,
+    var taskId: Long? = null,
     @ColumnInfo("task_title")
-    val title :String,
+    val title: String,
     @ColumnInfo(name = "task_description")
-    val description :String,
+    val description: String,
     @ColumnInfo(name = "date")
-    val date :String,
+    val date: String,
     @ColumnInfo(name = "time_from")
-    val timeFrom :String,
+    val timeFrom: String,
     @ColumnInfo(name = "tiem_to")
     val timeTo: String,
     @ColumnInfo(name = "task_type")
-    val taskType :String,
+    val taskType: String,
     @ColumnInfo(name = "task_tag_name")
-    val tagName:String=""
+    val tagName: String = ""
 
 )
 
-enum class TaskType(val type :String, val color:String,val icon:String){
-    Pending("Pending",LightPurple.toArgb().toString(), getIconName(Icons.Outlined.DateRange)),
-    OnGoing("On Going",LightGreen.toArgb().toString(),getIconName(Icons.Outlined.Build)),
-    Cancelled("Cancelled",LightRed.toArgb().toString(),getIconName(Icons.Outlined.Delete)),
-    Completed("Completed",LightBlue.toArgb().toString(),getIconName(Icons.Outlined.Done))
+data class SearchedResult(
+    var taskWithTags: List<TaskWithTags> ,
+    var tagWithTaskLists: List<TagWithTaskLists>
+)
+
+enum class TaskType(val type: String, val color: String, val icon: String) {
+    Pending("Pending", LightPurple.toArgb().toString(), getIconName(Icons.Outlined.DateRange)),
+    OnGoing("On Going", LightGreen.toArgb().toString(), getIconName(Icons.Outlined.Build)),
+    Cancelled("Cancelled", LightRed.toArgb().toString(), getIconName(Icons.Outlined.Delete)),
+    Completed("Completed", LightBlue.toArgb().toString(), getIconName(Icons.Outlined.Done))
 
 }

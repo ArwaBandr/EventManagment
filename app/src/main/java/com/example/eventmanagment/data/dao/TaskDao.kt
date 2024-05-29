@@ -1,11 +1,13 @@
 package com.example.eventmanagment.data.dao
 
+import android.app.appsearch.SearchResults
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import com.example.eventmanagment.data.entity.SearchedResult
 import com.example.eventmanagment.data.entity.TagWithTaskLists
 import com.example.eventmanagment.data.entity.Tags
 import com.example.eventmanagment.data.entity.Task
@@ -59,5 +61,25 @@ interface TaskDao {
     @Transaction
     @Query("SELECT * FROM tags_table")
     fun getTagWithTaskLists(): Flow<List<TagWithTaskLists>>
+
+    @Transaction
+    @Query("SELECT * FROM task_table WHERE task_id LIKE :TaskId Limit 1")
+    suspend fun getTasksById(TaskId: Long): TaskWithTags
+
+    @Query("SELECT * FROM task_table WHERE task_title LIKE :taskTitle")
+    fun searchForTasks(taskTitle: String): Flow<List<TaskWithTags>>
+
+    @Query("SELECT * FROM task_table WHERE task_title LIKE :taskTitle")
+    fun searchByTasks(taskTitle: String): List<TaskWithTags>
+
+    @Query("SELECT * FROM tags_table WHERE tag_name LIKE :tagTitle")
+    fun searchByTag(tagTitle: String): List<TagWithTaskLists>
+
+    @Transaction
+    suspend fun searchBoth(searchQuery: String): SearchedResult {
+        val taskResults = searchByTasks(searchQuery)
+        val tagResults = searchByTag(searchQuery)
+        return SearchedResult(taskResults, tagResults)
+    }
 
 }

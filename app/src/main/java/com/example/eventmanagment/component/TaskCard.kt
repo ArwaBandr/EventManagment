@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,15 +32,25 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.eventmanagment.data.entity.Tags
+import com.example.eventmanagment.data.entity.Task
 import com.example.eventmanagment.iconByName
 import com.example.eventmanagment.presntation.navigation.Screens
+import com.example.eventmanagment.presntation.screens.task.FilterTasksViewModel
 import com.example.eventmanagment.ui.theme.Navy
 import com.example.eventmanagment.ui.theme.PrimaryColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Tags?>,navController: NavController) {
+fun TaskCard(taskObj: Task,taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Tags?>,navController: NavHostController) {
+    val filterTasksViewModel = hiltViewModel<FilterTasksViewModel>()
+
     val dividerHeight = remember {
         mutableStateOf(50.dp)
     }
@@ -59,7 +68,12 @@ fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Ta
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(15.dp), Arrangement.SpaceBetween
+                    .padding(15.dp)
+                    .clickable {
+                     //   navController.navigate("${Screens.MainApp.DropDownMenu.rout}/${taskObj.taskId}")
+
+                    }, Arrangement.SpaceBetween
+
             ) {
 
                 Row {
@@ -100,6 +114,7 @@ fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Ta
                     }
                 }
                 //box
+                var expanded by remember { mutableStateOf(false) }
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = "",
@@ -107,10 +122,20 @@ fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Ta
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            navController.navigate(Screens.MainApp.DropDownMenu.rout)
+                            // navController.navigate("${Screens.MainApp.EditTaskScreen.rout}/${taskObj.taskId}")
+                            expanded = true
                         }
-
                 )
+//                if(expanded) {
+//                    DropDownMenu(taskObj,navController) {
+//                        CoroutineScope(Dispatchers.IO).launch {
+//                        filterTasksViewModel.deletTask(taskObj)}
+//                    }
+
+                if (expanded) {
+                    DropDownMenu(taskObj, navController)
+                    }
+                }
 
             }
             FlowRow(
@@ -154,4 +179,5 @@ fun TaskCard(taskTitle: String, timeFrom: String?, timeTo: String?, tag: List<Ta
 //    val color=Color.Gray.toArgb().toString()
 //    Color(color.toIntOrNull()?: PrimaryColor.toArgb())
 
-    }}
+//    }
+}

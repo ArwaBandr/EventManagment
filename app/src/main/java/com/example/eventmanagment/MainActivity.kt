@@ -16,15 +16,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -33,6 +39,7 @@ import com.example.eventmanagment.component.BottomBar
 import com.example.eventmanagment.presntation.navigation.EventAppNavigation
 import com.example.eventmanagment.presntation.navigation.Screens
 import com.example.eventmanagment.presntation.screens.auth.AuthViewModel
+import com.example.eventmanagment.presntation.screens.task.SettingScreen
 import com.example.eventmanagment.ui.theme.EventManagmentTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
@@ -44,6 +51,7 @@ import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -53,9 +61,10 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(this)
 
         setContent {
-            val authviewModel :AuthViewModel= hiltViewModel()
+            val authviewModel: AuthViewModel = hiltViewModel()
             EventManagmentTheme {
                 val navController = rememberNavController()
+                val config = LocalConfiguration.current
 
                 var showBottomBar by rememberSaveable {
                     mutableStateOf(false)
@@ -69,34 +78,44 @@ class MainActivity : ComponentActivity() {
                     Screens.MainApp.StaticsScreen.rout -> true
                     else -> false
                 }
-                Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .semantics { contentDescription = "MyScreen" },
-                ) { paddingvalues ->
-                    Box(
-                        Modifier
+
+                CompositionLocalProvider(
+                    LocalLayoutDirection provides
+                            if (config.layoutDirection == LayoutDirection.Rtl.ordinal)
+                                LayoutDirection.Rtl
+                            else LayoutDirection.Ltr
+                ) {
+                    Scaffold(
+                        modifier = Modifier
                             .fillMaxSize()
-                            .padding(paddingvalues)
-                    ) {
-                        if (authviewModel.error.value.isNotEmpty()) {
-                            Snackbar(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(), containerColor = Color.Red.copy(0.5f)
-                            )
-                            {
-                                Text(text = authviewModel.error.value)
+                            .semantics { contentDescription = "MyScreen" },
+                    ) { paddingvalues ->
+                        Box(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(paddingvalues)
+                        ) {
+                            if (authviewModel.error.value.isNotEmpty()) {
+                                Snackbar(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxWidth(), containerColor = Color.Red.copy(0.5f)
+                                )
+                                {
+                                    Text(text = authviewModel.error.value)
+                                }
                             }
+                            EventAppNavigation(authViewModel = authviewModel, navController)
                         }
-                        EventAppNavigation(authViewModel = authviewModel ,navController)
-
-                        if (showBottomBar) {
-                            BottomBar(navController)
-                        }
+                            if (showBottomBar) {
+                                BottomBar(navController)
+                            }
 
 
-                } }}
+
+                    }
+                }
+            }
         }
     }
 }

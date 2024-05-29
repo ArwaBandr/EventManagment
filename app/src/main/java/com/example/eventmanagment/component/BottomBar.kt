@@ -58,11 +58,12 @@ fun BottomBar(navController: NavHostController) {
                                 }
                                 .clickable {
                                     navigationSelectedItem.intValue = index
-                                    navController.navigate(bottomNavigationItem.route) {
-                                        popUpToTop(navController)
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
+                                    navController.navigate(bottomNavigationItem.route)
+//                                    {
+//                                        popUpToTop(navController)
+//                                        launchSingleTop = true
+//                                        restoreState = true
+//                                    }
 
                                 },
                             tint = PrimaryColor,

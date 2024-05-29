@@ -1,9 +1,9 @@
 package com.example.eventmanagment.presntation.screens.task
 
- import androidx.compose.foundation.clickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
- import androidx.compose.foundation.layout.Row
- import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +14,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
- import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -23,48 +24,61 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.eventmanagment.component.AddTagsListView
 import com.example.eventmanagment.component.CustomTextField
 import com.example.eventmanagment.component.TaskHeaderView
-import com.example.eventmanagment.component.TimePickerDialog
+import com.example.eventmanagment.data.entity.Tags
 import com.example.eventmanagment.presntation.navigation.Screens
 import com.example.eventmanagment.ui.theme.PrimaryColor
 
 @Composable
-fun AddTaskScreen(navController: NavHostController, addTaskViewModel: AddTaskViewModel) {
+fun EditTask(taskID: Long, navController: NavHostController ,viewModel: AddTaskViewModel) {
 
-    val allTags = addTaskViewModel.allTags.collectAsState(initial = emptyList())
-
-    val showStartTimeTimeDialog = remember {
-        mutableStateOf(false)
+    LaunchedEffect(taskID) {
+        if (taskID != null){
+            viewModel.selectedTaskwithTags(taskID = taskID)
+        }
     }
 
-    val showEndTimeTimeDialog = remember {
-        mutableStateOf(false)
-    }
-    LazyColumn(modifier = Modifier
-        .padding(horizontal = 16.dp)) {
+    val allTags = viewModel.allTags.collectAsState(initial = emptyList())
+
+
+//    LaunchedEffect(key1 = true) {
+//
+//        ViewModel.selectedTaskwithTags(taskID = taskID)
+//
+//    }
+
+
+
+    LazyColumn(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+    ) {
         item {
-            TaskHeaderView("Add Task"){
+            TaskHeaderView("Edit Task") {
                 navController.popBackStack()
             }
         }
+
         //task fields
         item {
-            CustomTextField(Modifier, "Title", Color.Gray, addTaskViewModel.title, isReadOnly = false)
+            CustomTextField(Modifier, "Title", Color.Gray, viewModel.title, isReadOnly = false)
             CustomTextField(
                 Modifier,
                 "Date",
                 Color.Gray,
-                addTaskViewModel.taskDate,
+                viewModel.taskDate,
                 isReadOnly = true,
                 trailingIcon = {
                     Icon(imageVector = Icons.Outlined.DateRange, "", modifier =
                     Modifier.clickable {
                         navController.navigate(Screens.MainApp.DateDailog.rout)
                     })
-                })}
+                })
+        }
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -74,17 +88,17 @@ fun AddTaskScreen(navController: NavHostController, addTaskViewModel: AddTaskVie
                     Modifier
                         .weight(1f)
                         .clickable {
-                            showStartTimeTimeDialog.value = true
+
                         },
-                    "Time From", Color.Gray, addTaskViewModel.startDate, isReadOnly = true,
+                    "Time From", Color.Gray, viewModel.startDate, isReadOnly = true,
                 )
                 CustomTextField(
                     Modifier
                         .weight(1f)
                         .clickable {
-                            showEndTimeTimeDialog.value = true
+
                         },
-                    "Time To", Color.Gray, addTaskViewModel.endDate, isReadOnly = true,
+                    "Time To", Color.Gray, viewModel.endDate, isReadOnly = true,
                 )
             }
         }
@@ -93,48 +107,37 @@ fun AddTaskScreen(navController: NavHostController, addTaskViewModel: AddTaskVie
                 Modifier,
                 "Description",
                 Color.Gray,
-                addTaskViewModel.describtion,
+                viewModel.describtion,
                 isReadOnly = false
             )
         }
 
         item {
-            AddTagsListView(allTags.value.orEmpty(),navController){
-               // addTaskViewModel.category.value=it.name
-                addTaskViewModel.selectedTags.value = it
+            AddTagsListView(allTags.value.orEmpty(), navController) {
+                // addTaskViewModel.category.value=it.name
+                viewModel.selectedTags.value = it
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    filterTasksViewModel.deletTag(it)
+//                }
             }
         }
         item {
-            ButtonAddTask(addTaskViewModel,navController)
+            ButtonEditTask(navController = navController, viewModel, taskID)
         }
     }
-    if (showStartTimeTimeDialog.value) {
-        TimePickerDialog(
-            onBackPress = {
-                showStartTimeTimeDialog.value = false
-            },
-            onTimeSelected = { hour, minute ->
-                addTaskViewModel.startDate.value = "$hour:$minute"
-            }
-        )
-    }
-    if (showEndTimeTimeDialog.value) {
-        TimePickerDialog(
-            onBackPress = {
-                showEndTimeTimeDialog.value = false
-            },
-            onTimeSelected = { hour, minute ->
-                addTaskViewModel.endDate.value = "$hour:$minute"
-            }
-        )
-    }
+
 }
 
 @Composable
-private fun ButtonAddTask(addTaskViewModel: AddTaskViewModel, navController: NavHostController) {
+private fun ButtonEditTask(
+    navController: NavHostController,
+    addTaskViewModel: AddTaskViewModel,
+    taskID: Long
+) {
     Button(
         onClick = {
-            addTaskViewModel.addTask()
+            // addTaskViewModel.editTask
+            addTaskViewModel.editTask(taskID)
             navController.popBackStack()
         },
         shape = RoundedCornerShape(12.dp),
@@ -142,12 +145,12 @@ private fun ButtonAddTask(addTaskViewModel: AddTaskViewModel, navController: Nav
             .fillMaxWidth()
             .padding(22.dp, bottom = 100.dp)
             .semantics {
-                testTag = "Add Task Button"
+                testTag = "Edit Task Button"
             },
         colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
     ) {
         Text(
-            text = "Create", modifier = Modifier.padding(vertical = 8.dp), fontSize = 16.sp,
+            text = "Edit", modifier = Modifier.padding(vertical = 8.dp), fontSize = 16.sp,
             color = Color.White
         )
     }
