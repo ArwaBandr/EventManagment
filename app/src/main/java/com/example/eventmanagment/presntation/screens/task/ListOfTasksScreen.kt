@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.eventmanagment.component.SearchBar
@@ -34,7 +35,6 @@ fun ListOfTasksScreen(
     navController: NavHostController
 ) {
     filterTasksViewModel.getListOfTasksByTagName(title)
-
     var searchedClicked by remember {
         mutableStateOf(false)
     }
@@ -46,9 +46,10 @@ fun ListOfTasksScreen(
 //        it.tag.name==title
 //    }
 
-    var tagAndtasks =if(filterTasksViewModel.searchedByTag.value.isEmpty()) filterTasksViewModel.queryTagwithTasks.value.firstOrNull() {
-        it.tag.name == title
-    }else filterTasksViewModel.searchedByTag.value.firstOrNull()
+    var tagAndtasks =
+        if (filterTasksViewModel.searchedByTag.value.isEmpty()) filterTasksViewModel.queryTagwithTasks.value.firstOrNull() {
+            it.tag.name == title
+        } else filterTasksViewModel.searchedByTag.value.firstOrNull()
 
 
 //    var searchedList: List<TagWithTaskLists> = emptyList()

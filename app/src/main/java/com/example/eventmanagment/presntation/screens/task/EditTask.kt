@@ -114,11 +114,8 @@ fun EditTask(taskID: Long, navController: NavHostController ,viewModel: AddTaskV
 
         item {
             AddTagsListView(allTags.value.orEmpty(), navController) {
-                // addTaskViewModel.category.value=it.name
                 viewModel.selectedTags.value = it
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    filterTasksViewModel.deletTag(it)
-//                }
+                viewModel.selectedTags.value
             }
         }
         item {

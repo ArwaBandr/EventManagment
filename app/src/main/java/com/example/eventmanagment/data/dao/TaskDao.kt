@@ -82,4 +82,9 @@ interface TaskDao {
         return SearchedResult(taskResults, tagResults)
     }
 
+    @Transaction
+    @Query("SELECT * FROM task_table")
+    fun getAllTaskwithTags(): List<TaskWithTags>
+
+
 }

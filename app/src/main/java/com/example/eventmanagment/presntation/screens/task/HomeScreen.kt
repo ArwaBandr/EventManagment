@@ -33,6 +33,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -53,12 +54,12 @@ fun HomeScreen(
 ) {
     LaunchedEffect(Unit) {
         filterTasksViewModel.filterTaskByDate(LocalDate.now().toString())
-        //filterTasksViewModel.getTaskwithTags()
     }
     val completedTask = filterTasksViewModel.completedTasks.collectAsState(initial = null)
     val cancelledTask = filterTasksViewModel.cancelledTasks.collectAsState(initial = null)
     val onGoingTask = filterTasksViewModel.onGoingTasks.collectAsState(initial = null)
     val pendingTask = filterTasksViewModel.pendingTasks.collectAsState(initial = null)
+   // val addViewMode = hiltViewModel<AddTaskViewModel>()
 
     val tasksList = filterTasksViewModel.taskWithTags
 

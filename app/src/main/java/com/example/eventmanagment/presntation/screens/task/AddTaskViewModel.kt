@@ -12,6 +12,7 @@ import com.example.eventmanagment.data.entity.TaskWithTags
 import com.example.eventmanagment.data.repositry.TaskRepositry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.annotation.meta.When
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +25,6 @@ class AddTaskViewModel @Inject constructor(val taskRepositry: TaskRepositry) : V
     val taskType: MutableState<String> = mutableStateOf(TaskType.OnGoing.type)
     val category: MutableState<String> = mutableStateOf("")
 
-
     //tags
     val tagName: MutableState<String> = mutableStateOf("")
     val tagColor: MutableState<String> = mutableStateOf("")
@@ -32,6 +32,8 @@ class AddTaskViewModel @Inject constructor(val taskRepositry: TaskRepositry) : V
     val allTags = taskRepositry.getAllTags()
 
     val selectedTags = mutableStateOf<Set<Tags>>(emptySet())
+    val taskWithTags = mutableStateOf<List<TaskWithTags>>(emptyList())
+
 
     //var allTasks = taskRepositry.getAllTasks()
     fun addTask() {
@@ -71,39 +73,46 @@ class AddTaskViewModel @Inject constructor(val taskRepositry: TaskRepositry) : V
         taskRepositry.insertTaskTagCrossRefs(taskTaggCrossRefs)
     }
 
-     fun selectedTaskwithTags(taskID: Long) {
-         viewModelScope.launch {
-            val selectedtask = taskRepositry.selectedTaskwithTags(taskID)
-             title.value = selectedtask.task.title
-             describtion.value = selectedtask.task.description
-             taskDate.value = selectedtask.task.date
-             startDate.value = selectedtask.task.timeFrom.orEmpty()
-             endDate.value = selectedtask.task.timeTo.orEmpty()
-             taskType.value = selectedtask.task.taskType.orEmpty()
-             tagName.value = selectedtask.task.taskType.orEmpty()
-             selectedTags.value = selectedtask.tag.toSet()
-         }
-     }
-
-    fun editTask(taskID:Long) {
+    fun selectedTaskwithTags(taskID: Long) {
         viewModelScope.launch {
-              val  task = Task(
-                    taskId = taskID,
-                    title = title.value,
-                    description = describtion.value,
-                    date = taskDate.value,
-                    timeFrom = startDate.value,
-                    timeTo = endDate.value,
-                    taskType = taskType.value,
-                    tagName = ""
-                )
-                val tag = selectedTags.value.toList()
+            val selectedtask = taskRepositry.selectedTaskwithTags(taskID)
+            title.value = selectedtask.task.title
+            describtion.value = selectedtask.task.description
+            taskDate.value = selectedtask.task.date
+            startDate.value = selectedtask.task.timeFrom.orEmpty()
+            endDate.value = selectedtask.task.timeTo.orEmpty()
+            taskType.value = selectedtask.task.taskType.orEmpty()
+            tagName.value = selectedtask.task.taskType.orEmpty()
+            selectedTags.value = selectedtask.tag.toSet()
+        }
+    }
 
-            taskRepositry.insertTaskWithTags(task, tag)
+    fun editTask(taskID: Long) {
+        viewModelScope.launch {
+            val task = Task(
+                taskId = taskID,
+                title = title.value,
+                description = describtion.value,
+                date = taskDate.value,
+                timeFrom = startDate.value,
+                timeTo = endDate.value,
+                taskType = taskType.value,
+                tagName = ""
+            )
+            val tag = selectedTags.value.toList()
+
+            // taskRepositry.insertTaskWithTags(task, tag)
+            upsertTaskWithTags(task,tag)
         }
 
     }
+    private suspend fun upsertTaskWithTags(task: Task, tags: List<Tags>) {
+        val taskTaggCrossRefs =
+            tags.map { TaskTagCrossRef(task.taskId!!, it.name) }
+        taskRepositry.insertTaskTagCrossRefs(taskTaggCrossRefs)
+        //val updatedtask = taskRepositry.insertTaskWithTags(task, tags)
 
+    }
 
 
 }

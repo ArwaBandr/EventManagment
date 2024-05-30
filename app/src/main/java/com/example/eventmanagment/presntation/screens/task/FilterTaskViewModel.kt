@@ -105,6 +105,12 @@ class FilterTasksViewModel @Inject constructor(val taskRepositry: TaskRepositry)
 
     }
 
+fun update(){
+    viewModelScope.launch {
+        val updatedTasks = taskRepositry.getAllTaskwithTags()
+        taskWithTags.value=updatedTasks
+    }
+}
 
     fun SearchTaskAndTags(query: String) {
         viewModelScope.launch {

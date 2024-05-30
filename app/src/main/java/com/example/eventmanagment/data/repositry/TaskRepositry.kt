@@ -67,4 +67,9 @@ class TaskRepositry @Inject constructor(private val taskDao: TaskDao) {
     suspend fun searchByTag(tagTitle: String)=taskDao.searchByTag(tagTitle)
 
     suspend fun searchBoth(query:String) =taskDao.searchBoth(query)
+
+    suspend fun getAllTaskwithTags() =taskDao.getAllTaskwithTags()
+
+
+
 }
