@@ -1,6 +1,7 @@
 package com.example.eventmanagment
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.ManagedActivityResultLauncher
@@ -8,6 +9,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,12 +35,14 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.eventmanagment.component.BottomBar
 import com.example.eventmanagment.presntation.navigation.EventAppNavigation
 import com.example.eventmanagment.presntation.navigation.Screens
 import com.example.eventmanagment.presntation.screens.auth.AuthViewModel
+import com.example.eventmanagment.presntation.screens.task.AddTaskViewModel
 import com.example.eventmanagment.presntation.screens.task.SettingScreen
 import com.example.eventmanagment.ui.theme.EventManagmentTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -59,7 +63,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
+        val addViewModel = viewModels<AddTaskViewModel>()
 
+        lifecycleScope.launch {
+            addViewModel.value.getLanguageSettings ().collect{
+                val locale = if (it) Locale("ar") else Locale("en")
+                updateLocale(locale)
+            }
+            }
         setContent {
             val authviewModel: AuthViewModel = hiltViewModel()
             EventManagmentTheme {
@@ -78,6 +89,8 @@ class MainActivity : ComponentActivity() {
                     Screens.MainApp.StaticsScreen.rout -> true
                     else -> false
                 }
+
+
 
                 CompositionLocalProvider(
                     LocalLayoutDirection provides
@@ -111,11 +124,16 @@ class MainActivity : ComponentActivity() {
                                 BottomBar(navController)
                             }
 
-
-
                     }
                 }
             }
         }
+    }
+    fun updateLocale(locale: Locale) {
+        val resources: Resources = this.resources
+        val configuration = resources.configuration
+        configuration.setLocale(locale)
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+
     }
 }

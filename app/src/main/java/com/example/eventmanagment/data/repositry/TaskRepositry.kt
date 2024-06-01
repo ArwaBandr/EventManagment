@@ -1,6 +1,7 @@
 package com.example.eventmanagment.data.repositry
 
 import com.example.eventmanagment.data.dao.TaskDao
+import com.example.eventmanagment.data.datastore.LanguageDatastore
 import com.example.eventmanagment.data.entity.TagWithTaskLists
 import com.example.eventmanagment.data.entity.Tags
 import com.example.eventmanagment.data.entity.Task
@@ -9,19 +10,22 @@ import com.example.eventmanagment.data.entity.TaskWithTags
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class TaskRepositry @Inject constructor(private val taskDao: TaskDao) {
+class TaskRepositry @Inject constructor(
+    private val taskDao: TaskDao,
+    private val datastore: LanguageDatastore
+) {
 
-    suspend fun insertTaskTagCrossRefs(taskTagCrossRef: List<TaskTagCrossRef>){
+    suspend fun insertTaskTagCrossRefs(taskTagCrossRef: List<TaskTagCrossRef>) {
         taskDao.insertTaskTagCross(taskTagCrossRef)
 
     }
 
-    suspend fun insertTask(task: Task):Long{
-       return taskDao.addTask(task = task)
+    suspend fun insertTask(task: Task): Long {
+        return taskDao.addTask(task = task)
     }
 
 
-    suspend fun deletTask(task: Task){
+    suspend fun deletTask(task: Task) {
         taskDao.deleteTask(task = task)
     }
 
@@ -29,47 +33,53 @@ class TaskRepositry @Inject constructor(private val taskDao: TaskDao) {
         return taskDao.getAllTask()
     }
 
-    suspend fun insertTag(tags: Tags){
+    suspend fun insertTag(tags: Tags) {
         taskDao.upsertTag(tags)
     }
 
-    suspend fun deletTag(tags: Tags){
+    suspend fun deletTag(tags: Tags) {
         taskDao.deletTag(tags)
     }
 
-    fun getTagsWithTag(tagName: String):Flow<List<TagWithTaskLists>>{
+    fun getTagsWithTag(tagName: String): Flow<List<TagWithTaskLists>> {
         return taskDao.getTagsWithTask(tagName)
     }
 
-    fun getAllTags():Flow<List<Tags>>{
+    fun getAllTags(): Flow<List<Tags>> {
         return taskDao.getAllTags()
     }
 
-    suspend fun insertTagList(tagList: List<Tags>){
-         taskDao.upsertTagList(tagList)
+    suspend fun insertTagList(tagList: List<Tags>) {
+        taskDao.upsertTagList(tagList)
     }
 
-     fun sortTaskByCreationDate(date: String):Flow<List<TaskWithTags>>{
+    fun sortTaskByCreationDate(date: String): Flow<List<TaskWithTags>> {
         return taskDao.sortByCreationDate(date)
     }
-    fun getTaskWithTasgs():Flow<List<TaskWithTags>>{
+
+    fun getTaskWithTasgs(): Flow<List<TaskWithTags>> {
         return taskDao.getTasksWithTags()
     }
 
-    fun getTagsWithTasksList()= taskDao.getTagWithTaskLists()
+    fun getTagsWithTasksList() = taskDao.getTagWithTaskLists()
 
-    suspend fun selectedTaskwithTags(taskID:Long)=taskDao.getTasksById(taskID)
+    suspend fun selectedTaskwithTags(taskID: Long) = taskDao.getTasksById(taskID)
 
-    suspend fun insertTaskWithTags(task: Task, tags:List<Tags>) =taskDao.insertTaskWithTags(task,tags)
+    suspend fun insertTaskWithTags(task: Task, tags: List<Tags>) =
+        taskDao.insertTaskWithTags(task, tags)
 
-    suspend fun searchForTasks(taskTitle:String)= taskDao.searchForTasks(taskTitle)
+    suspend fun searchForTasks(taskTitle: String) = taskDao.searchForTasks(taskTitle)
 
-    suspend fun searchByTag(tagTitle: String)=taskDao.searchByTag(tagTitle)
+    suspend fun searchByTag(tagTitle: String) = taskDao.searchByTag(tagTitle)
 
-    suspend fun searchBoth(query:String) =taskDao.searchBoth(query)
+    suspend fun searchBoth(query: String) = taskDao.searchBoth(query)
 
-    suspend fun getAllTaskwithTags() =taskDao.getAllTaskwithTags()
+     fun getAllTaskwithTags() = taskDao.getAllTaskwithTags()
+
+    suspend fun insertCross(task: Task, tags: List<Tags>) = taskDao.updateCrossRef(task, tags)
 
 
+    suspend fun saveLangugeSetting(changed: Boolean) = datastore.changeLanguage(changed)
 
+     fun getLangugeSetting()=datastore.getLangugeSetting()
 }

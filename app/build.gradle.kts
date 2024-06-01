@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.datastore.core.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -130,5 +131,9 @@ dependencies {
 
     // for language translation
     implementation("com.google.mlkit:translate:17.0.0")
+
+    //data store
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
 
 }

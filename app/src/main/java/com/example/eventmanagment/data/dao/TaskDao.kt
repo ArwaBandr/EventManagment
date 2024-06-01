@@ -4,6 +4,7 @@ import android.app.appsearch.SearchResults
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -84,7 +85,28 @@ interface TaskDao {
 
     @Transaction
     @Query("SELECT * FROM task_table")
-    fun getAllTaskwithTags(): List<TaskWithTags>
+    fun getAllTaskwithTags(): Flow<List<TaskWithTags>>
+//    @Transaction
+//    @Query("SELECT * FROM task_table")
+//    fun getAllTaskWithTags(): Flow<List<TaskWithTags>>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTaskTagCrossRef(crossRef: TaskTagCrossRef): Long
+    @Query("DELETE FROM tasktagcrossref WHERE task_id LIKE :taskId")
+    fun deletCrossRef(taskId:Long)
 
+    @Transaction
+    suspend fun updateCrossRef(task: Task,tags: List<Tags>){
+        addTask(task)
+
+        deletCrossRef(task.taskId!!)
+
+        for(tag in tags){
+        upsertTag(tag)
+            insertTaskTagCrossRef(TaskTagCrossRef(task.taskId!!,tag.name))
+           // insertTaskTagCross(TaskTagCrossRef(task.taskId!!,tag.name))
+        }
+//the problem is the previouse tags are also removed
+//todo when the user press the tag drop down mune for delete and add
+    }
 }

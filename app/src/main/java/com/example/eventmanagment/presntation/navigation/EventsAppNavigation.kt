@@ -20,6 +20,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.eventmanagment.component.DatePickerr
+import com.example.eventmanagment.component.TimePickerDialog
 import com.example.eventmanagment.presntation.screens.auth.AuthViewModel
 import com.example.eventmanagment.presntation.screens.auth.LoginScreen
 import com.example.eventmanagment.presntation.screens.auth.SignUpScreen
@@ -194,9 +195,11 @@ fun NavGraphBuilder.mainAppNavigation(
         }
 
         composable(Screens.MainApp.SettingsScreen.rout) {
-            SettingScreen(navController = navController)
+            val viewModel = hiltViewModel<AddTaskViewModel>()
+            SettingScreen(navController = navController,viewModel)
         }
     }
+
 }
 
 fun NavOptionsBuilder.popUpToTop(navController: NavController) {

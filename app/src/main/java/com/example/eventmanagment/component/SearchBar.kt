@@ -51,6 +51,7 @@ fun SearchBar(filterTasksViewModel: FilterTasksViewModel) {
                     CircleShape
                 ),
             //{filterTasksViewModel.searchForTasks(searchText)}
+            //filterTasksViewModel.SearchTaskAndTags(searchText)
             keyboardActions = KeyboardActions(onSearch = {filterTasksViewModel.SearchTaskAndTags(searchText)}) ,
             keyboardOptions = KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Search),
             leadingIcon = {

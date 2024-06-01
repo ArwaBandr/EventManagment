@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 
 import javax.inject.Inject
@@ -36,10 +37,11 @@ class FilterTasksViewModel @Inject constructor(val taskRepositry: TaskRepositry)
 
     // val taskWithTags =  mutableStateOf<List<TaskWithTags>> (emptyList())
     val taskWithTags = mutableStateOf<List<TaskWithTags>>(emptyList())
+    val taskWithTags_ : MutableState<List<TaskWithTags>> = mutableStateOf(emptyList())
     val queryTagwithTasks = mutableStateOf<List<TagWithTaskLists>>(emptyList())
 
     var searchedTasks = mutableStateOf<List<TaskWithTags>>(emptyList())
-    var searchedByTag = mutableStateOf<List<TagWithTaskLists>>(emptyList())
+    //var searchedByTag = mutableStateOf<List<TagWithTaskLists>>(emptyList())
 
     init {
         //add base tags
@@ -105,17 +107,25 @@ class FilterTasksViewModel @Inject constructor(val taskRepositry: TaskRepositry)
 
     }
 
-fun update(){
-    viewModelScope.launch {
-        val updatedTasks = taskRepositry.getAllTaskwithTags()
-        taskWithTags.value=updatedTasks
+
+    fun getTasksByTagName(tagName: String) {
+        viewModelScope.launch {
+            taskRepositry.getAllTaskwithTags().collect{
+                taskWithTags_.value =
+                    it.filter {
+                        it.tag.map {
+                            it.name
+                        }.contains(tagName)
+                    }
+            }
+        }
     }
-}
+
 
     fun SearchTaskAndTags(query: String) {
         viewModelScope.launch {
-            searchedTasks.value = taskRepositry.searchBoth(query).taskWithTags
-            searchedByTag.value=taskRepositry.searchBoth(query).tagWithTaskLists
+            taskWithTags_.value = taskRepositry.searchBoth(query).taskWithTags
+            queryTagwithTasks.value=taskRepositry.searchBoth(query).tagWithTaskLists
         }
     }
 

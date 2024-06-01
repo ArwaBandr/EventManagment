@@ -1,6 +1,7 @@
 package com.example.eventmanagment.presntation.screens.task
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +12,10 @@ import com.example.eventmanagment.data.entity.TaskType
 import com.example.eventmanagment.data.entity.TaskWithTags
 import com.example.eventmanagment.data.repositry.TaskRepositry
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.concurrent.Flow
 import javax.annotation.meta.When
 import javax.inject.Inject
 
@@ -33,7 +37,7 @@ class AddTaskViewModel @Inject constructor(val taskRepositry: TaskRepositry) : V
 
     val selectedTags = mutableStateOf<Set<Tags>>(emptySet())
     val taskWithTags = mutableStateOf<List<TaskWithTags>>(emptyList())
-
+    val langugeSettings = mutableStateOf<Boolean>(false)
 
     //var allTasks = taskRepositry.getAllTasks()
     fun addTask() {
@@ -102,10 +106,14 @@ class AddTaskViewModel @Inject constructor(val taskRepositry: TaskRepositry) : V
             val tag = selectedTags.value.toList()
 
             // taskRepositry.insertTaskWithTags(task, tag)
-            upsertTaskWithTags(task,tag)
+
+            //upsertTaskWithTags(task,tag)
+
+            taskRepositry.insertCross(task, tag)
         }
 
     }
+
     private suspend fun upsertTaskWithTags(task: Task, tags: List<Tags>) {
         val taskTaggCrossRefs =
             tags.map { TaskTagCrossRef(task.taskId!!, it.name) }
@@ -114,5 +122,14 @@ class AddTaskViewModel @Inject constructor(val taskRepositry: TaskRepositry) : V
 
     }
 
+    fun changeLangugeDataStore(changed: Boolean) {
+        viewModelScope.launch {
+            taskRepositry.saveLangugeSetting(changed = changed)
+        }
+    }
+
+    fun getLanguageSettings(): kotlinx.coroutines.flow.Flow<Boolean> {
+        return taskRepositry.getLangugeSetting()
+    }
 
 }

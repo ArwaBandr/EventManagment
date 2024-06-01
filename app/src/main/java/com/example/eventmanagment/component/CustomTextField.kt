@@ -48,7 +48,8 @@ fun CustomTextField(
                 focusedIndicatorColor = textColor,
                 focusedLabelColor = textColor
             ),
-            readOnly = if (trailingIcon ==null) false else true,
+            readOnly = isReadOnly,
         trailingIcon ={trailingIcon?.invoke()},)
     }
 }
+//if (trailingIcon ==null) false else true

@@ -54,8 +54,8 @@ fun TaskByDatScreen(filterTasksViewModel: FilterTasksViewModel, navController: N
 
     //var tasks = filterTasksViewModel.taskWithTags
 
-    var tasks =
-        if (filterTasksViewModel.searchedTasks.value.isEmpty()) filterTasksViewModel.taskWithTags else filterTasksViewModel.searchedTasks
+    var tasks = filterTasksViewModel.taskWithTags_
+        //if (filterTasksViewModel.searchedTasks.value.isEmpty()) filterTasksViewModel.taskWithTags else filterTasksViewModel.searchedTasks
     var tag = filterTasksViewModel.tags.collectAsState(initial = null).value
     var countHour: Int = 0
     var countMinutes: Int = 0

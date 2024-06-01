@@ -28,6 +28,8 @@ sealed class Screens(val rout: String) {
 
         data object  SettingsScreen :Screens("settings_screen")
 
+        data object TimeDialog:Screens("time_dialog_screen")
+
     }
 
     data object Authentication : Screens("authGraph") {

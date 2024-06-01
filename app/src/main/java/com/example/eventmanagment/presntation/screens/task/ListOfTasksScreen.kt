@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,37 +35,17 @@ fun ListOfTasksScreen(
     filterTasksViewModel: FilterTasksViewModel,
     navController: NavHostController
 ) {
-    filterTasksViewModel.getListOfTasksByTagName(title)
-    var searchedClicked by remember {
-        mutableStateOf(false)
+    //filterTasksViewModel.getListOfTasksByTagName(title)
+    LaunchedEffect(Unit) {
+        filterTasksViewModel.getTasksByTagName(title)
     }
 
 
-//    var tagAndtasks =if (filterTasksViewModel.searchedByTag.value.isEmpty())filterTasksViewModel.queryTagwithTasks.value.firstOrNull() {
-//        it.tag.name == title
-//    } else filterTasksViewModel.searchedByTag.value.firstOrNull(){
-//        it.tag.name==title
-//    }
+var tagAndtasks = filterTasksViewModel.queryTagwithTasks.value.firstOrNull(){
+    it.tag.name==title
+}
 
-    var tagAndtasks =
-        if (filterTasksViewModel.searchedByTag.value.isEmpty()) filterTasksViewModel.queryTagwithTasks.value.firstOrNull() {
-            it.tag.name == title
-        } else filterTasksViewModel.searchedByTag.value.firstOrNull()
-
-
-//    var searchedList: List<TagWithTaskLists> = emptyList()
-//    var tag:Tags
-//    var task:Task
-//    filterTasksViewModel.searchedTasks.value.forEach {
-//        it.tag.forEach { stags ->
-//            if (stags.name == title) {
-//               tag = Tags(stags.name, stags.color, stags.iconName)
-//            }
-//        }
-//        task = Task(it.task.taskId,it.task.title,it.task.description,it.task.date,it.task.timeFrom,it.task.timeTo,it.task.taskType,it.task.tagName)
-//    }
-
-
+    var result = filterTasksViewModel.taskWithTags_.value
     LazyColumn(Modifier.fillMaxSize()) {
         item {
             TaskHeaderView(title = title) {
@@ -74,13 +55,23 @@ fun ListOfTasksScreen(
 
         item { SearchBar(filterTasksViewModel = filterTasksViewModel) }
 
-        items(tagAndtasks?.tasks.orEmpty()) {
+//        items(tagAndtasks?.tasks.orEmpty()) {
+//            TaskCard(
+//                taskObj = it,
+//                taskTitle = it.title,
+//                timeFrom = it.timeFrom,
+//                timeTo = it.timeTo,
+//                tag = listOf(tagAndtasks?.tag),
+//                navController
+//            )
+//        }
+        items(result) {
             TaskCard(
-                taskObj = it,
-                taskTitle = it.title,
-                timeFrom = it.timeFrom,
-                timeTo = it.timeTo,
-                tag = listOf(tagAndtasks?.tag),
+                taskObj = it.task,
+                taskTitle = it.task.title,
+                timeFrom = it.task.timeFrom,
+                timeTo = it.task.timeTo,
+                tag = it.tag,
                 navController
             )
         }
